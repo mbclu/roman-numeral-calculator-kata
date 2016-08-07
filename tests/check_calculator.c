@@ -4,21 +4,33 @@
 
 #include "../src/calculator.h"
 
+char * result;
+
+void setup() {
+}
+
+void teardown() {
+	free(result);
+}
+
 START_TEST (one_plus_one_is_two)
 {
-	ck_assert_str_eq("ii", add("i", "i"));
+	result = add("i", "i");
+	ck_assert_str_eq("II", result);
 }
 END_TEST
 
 START_TEST (one_plus_two_is_three)
 {
-	ck_assert_str_eq("iii", add("i", "ii"));
+	result = add("i", "ii");
+	ck_assert_str_eq("III", result);
 }
 END_TEST
 
 START_TEST (two_plus_two_is_four)
 {
-	ck_assert_str_eq("iv", add("ii", "ii"));
+	result = add("ii", "ii");
+	ck_assert_str_eq("IV", result);
 }
 END_TEST
 
@@ -86,7 +98,6 @@ START_TEST (one_is_represented_by_the_letter_I)
 {
 	char * result = convertToNumeral(1);
 	ck_assert_str_eq("I", result);
-	free(result);
 }
 END_TEST
 
@@ -102,7 +113,6 @@ START_TEST (four_is_represented_by_the_sequence_IV)
 {
 	char * result = convertToNumeral(4);
 	ck_assert_str_eq("IV", result);
-	free(result);
 }
 END_TEST
 
@@ -110,7 +120,6 @@ START_TEST (two_is_represented_by_the_sequence_II)
 {
 	char * result = convertToNumeral(2);
 	ck_assert_str_eq("II", result);
-	free(result);
 }
 END_TEST
 
@@ -118,7 +127,6 @@ START_TEST (nine_is_represented_by_the_sequence_IX)
 {
 	char * result = convertToNumeral(9);
 	ck_assert_str_eq("IX", result);
-	free(result);
 }
 END_TEST
 
@@ -126,7 +134,6 @@ START_TEST (forty_is_represented_by_the_sequence_XL)
 {
 	char * result = convertToNumeral(40);
 	ck_assert_str_eq("XL", result);
-	free(result);
 }
 END_TEST
 
@@ -134,7 +141,6 @@ START_TEST (ninety_is_represented_by_the_sequence_XC)
 {
 	char * result = convertToNumeral(90);
 	ck_assert_str_eq("XC", result);
-	free(result);
 }
 END_TEST
 
@@ -142,7 +148,6 @@ START_TEST (four_hundred_is_represented_by_the_sequence_CD)
 {
 	char * result = convertToNumeral(400);
 	ck_assert_str_eq("CD", result);
-	free(result);
 }
 END_TEST
 
@@ -150,45 +155,89 @@ START_TEST (nine_hundred_is_represented_by_the_sequence_CM)
 {
 	char * result = convertToNumeral(900);
 	ck_assert_str_eq("CM", result);
-	free(result);
 }
 END_TEST
 
 START_TEST (three_thousand_four_hundred_fifty_six_is_represented_by_the_sequence_mmmcdlvi)
 {
-	ck_assert_str_eq("MMMCDLVI", convertToNumeral(3456));
+	char * result = convertToNumeral(3456);
+	ck_assert_str_eq("MMMCDLVI", result);
+}
+END_TEST
+
+START_TEST (add_returns_concatenated_result_in_correct_logical_order)
+{
+	char * result = add("XIV", "LX");
+	ck_assert_str_eq("LXXIV", result);
+}
+END_TEST
+
+START_TEST (ii_minus_i_is_i)
+{
+	char * result = subtractSecondFromFirst("ii", "i");
+	ck_assert_str_eq("I", result);
+}
+END_TEST
+
+START_TEST (XVII_minus_IX_is_VII)
+{
+	char * result = subtractSecondFromFirst("XVII", "IX");
+	ck_assert_str_eq("VIII", result);
+}
+END_TEST
+
+START_TEST (MMMCMXCIX_minus_MCXI_is_MMDCCCLXXXVIII)
+{
+	char * result = subtractSecondFromFirst("MMMCMXCIX", "MCXI");
+	ck_assert_str_eq("MMDCCCLXXXVIII", result);
 }
 END_TEST
 
 Suite * calculator_suite(void) {
 	Suite *s;
 	TCase *tc_core;
+	TCase *tc_convert_to_int;
+	TCase *tc_convert_to_numeral;
 
     s = suite_create("Calculator Tests");
 
-    tc_core = tcase_create("Core");
-
+    tc_convert_to_int = tcase_create("Convert To Integer");
+    tcase_add_test(tc_convert_to_int, i_represents_one);
+    tcase_add_test(tc_convert_to_int, ii_represents_two);
+    tcase_add_test(tc_convert_to_int, v_represents_five);
+    tcase_add_test(tc_convert_to_int, single_letters_by_themseleves_represent_core_values);
+    tcase_add_test(tc_convert_to_int, iv_represents_four);
+    tcase_add_test(tc_convert_to_int, xix_represents_nineteen);
+    tcase_add_test(tc_convert_to_int, mmmcdlvi_represents_three_thousand_four_hundred_fifty_six);
+    tcase_add_test(tc_convert_to_int, uppercase_letters_also_represent_things);
+    
+    tc_convert_to_numeral = tcase_create("Convert To Numeral");
+    tcase_add_checked_fixture(tc_convert_to_numeral, setup, teardown);
+    tcase_add_test(tc_convert_to_numeral, one_is_represented_by_the_letter_I);
+    tcase_add_test(tc_convert_to_numeral, five_is_represented_by_the_letter_V);
+    tcase_add_test(tc_convert_to_numeral, two_is_represented_by_the_sequence_II);
+    tcase_add_test(tc_convert_to_numeral, four_is_represented_by_the_sequence_IV);
+    tcase_add_test(tc_convert_to_numeral, nine_is_represented_by_the_sequence_IX);
+    tcase_add_test(tc_convert_to_numeral, forty_is_represented_by_the_sequence_XL);
+    tcase_add_test(tc_convert_to_numeral, ninety_is_represented_by_the_sequence_XC);
+    tcase_add_test(tc_convert_to_numeral, four_hundred_is_represented_by_the_sequence_CD);
+    tcase_add_test(tc_convert_to_numeral, nine_hundred_is_represented_by_the_sequence_CM);
+    tcase_add_test(tc_convert_to_numeral, three_thousand_four_hundred_fifty_six_is_represented_by_the_sequence_mmmcdlvi);
+    tcase_add_test(tc_convert_to_numeral, add_returns_concatenated_result_in_correct_logical_order);
+    
+    tc_core = tcase_create("Addition and Subtraction");
+    tcase_add_checked_fixture(tc_core, setup, teardown);
+    
     tcase_add_test(tc_core, one_plus_one_is_two);
     tcase_add_test(tc_core, one_plus_two_is_three);
     tcase_add_test(tc_core, two_plus_two_is_four);
-    tcase_add_test(tc_core, i_represents_one);
-    tcase_add_test(tc_core, ii_represents_two);
-    tcase_add_test(tc_core, v_represents_five);
-    tcase_add_test(tc_core, single_letters_by_themseleves_represent_core_values);
-    tcase_add_test(tc_core, iv_represents_four);
-    tcase_add_test(tc_core, xix_represents_nineteen);
-    tcase_add_test(tc_core, mmmcdlvi_represents_three_thousand_four_hundred_fifty_six);
-    tcase_add_test(tc_core, uppercase_letters_also_represent_things);
-    tcase_add_test(tc_core, one_is_represented_by_the_letter_I);
-    tcase_add_test(tc_core, five_is_represented_by_the_letter_V);
-    tcase_add_test(tc_core, two_is_represented_by_the_sequence_II);
-    tcase_add_test(tc_core, four_is_represented_by_the_sequence_IV);
-    tcase_add_test(tc_core, nine_is_represented_by_the_sequence_IX);
-    tcase_add_test(tc_core, forty_is_represented_by_the_sequence_XL);
-    tcase_add_test(tc_core, ninety_is_represented_by_the_sequence_XC);
-    tcase_add_test(tc_core, four_hundred_is_represented_by_the_sequence_CD);
-    tcase_add_test(tc_core, nine_hundred_is_represented_by_the_sequence_CM);
-    tcase_add_test(tc_core, three_thousand_four_hundred_fifty_six_is_represented_by_the_sequence_mmmcdlvi);
+    
+    tcase_add_test(tc_core, ii_minus_i_is_i);
+    tcase_add_test(tc_core, XVII_minus_IX_is_VII);
+    tcase_add_test(tc_core, MMMCMXCIX_minus_MCXI_is_MMDCCCLXXXVIII);
+    
+    suite_add_tcase(s, tc_convert_to_int);
+    suite_add_tcase(s, tc_convert_to_numeral);
     suite_add_tcase(s, tc_core);
 
     return s;
