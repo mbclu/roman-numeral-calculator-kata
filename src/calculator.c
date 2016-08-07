@@ -1,6 +1,7 @@
 #include "calculator.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 char * add(char *input1, char *input2) {
 	char *result = malloc(1 + strlen(input1) + strlen(input2));
@@ -39,7 +40,7 @@ int convertToInt(char *numeral) {
 	char currentDigit;
 	char prevDigit;
 	
-	for (i = length - 1; i >= 0; i--) {
+	for (i = length - 1; i >= 0; --i) {
 		currentDigit = numeral[i];
 		if (i < length - 1) {
 			prevDigit = numeral[i + 1];
@@ -52,6 +53,34 @@ int convertToInt(char *numeral) {
 			result -= currentDigitValue;
 		} else {
 			result += currentDigitValue;
+		}
+	}
+	return result;
+}
+
+int appendCharAndDecrement(char *resultString, char *toAppend, int value, int suspectValue) {
+	int resultantValue = value;
+	if (resultantValue - suspectValue >= 0) {
+		realloc(resultString, strlen(toAppend));
+		strcat(resultString, toAppend);
+		resultantValue -= suspectValue;
+	}
+	return resultantValue;
+}
+
+char * convertToNumeral(int value) {
+	char *result = malloc(sizeof(char));
+	int suspectValues[] = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+	char *suspectCharacters[] = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+	int suspectIndex = 0;
+	int newValue = value;
+	while(newValue > 0) {
+		newValue = appendCharAndDecrement(result, suspectCharacters[suspectIndex], value, suspectValues[suspectIndex]);
+		if (newValue != value) {
+			value = newValue;
+			suspectIndex = 0;
+		} else {
+			++suspectIndex;
 		}
 	}
 	return result;
