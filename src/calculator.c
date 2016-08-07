@@ -14,3 +14,21 @@ char * add(char *input1, char *input2) {
 		return result; 
 	}
 }
+
+int convertToInt(char *numeral) {
+	int i;
+	int result = 0;
+	size_t length = strlen(numeral);
+	for (i = 0; i < length; i++) {
+		switch (numeral[i]) {
+			case 'i': result += 1; break;
+			case 'v': result += 5; break;
+			case 'x': result += 10; break;
+			case 'l': result += 50; break;
+			case 'c': result += 100; break;
+			case 'd': result += 500; break;
+			case 'm': result += 1000; break;
+		}
+	}
+	return result;
+}

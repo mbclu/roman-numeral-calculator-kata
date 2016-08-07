@@ -22,6 +22,42 @@ START_TEST (two_plus_two_is_four)
 }
 END_TEST
 
+START_TEST (i_represents_one)
+{
+	ck_assert_uint_eq(1, convertToInt("i"));
+}
+END_TEST
+
+START_TEST (ii_represents_two)
+{
+	ck_assert_uint_eq(2, convertToInt("ii"));
+}
+END_TEST
+
+START_TEST (v_represents_five)
+{
+	ck_assert_uint_eq(5, convertToInt("v"));
+}
+END_TEST
+
+START_TEST (single_letters_by_themseleves_represent_core_values)
+{
+	ck_assert_uint_eq(1, convertToInt("i"));
+	ck_assert_uint_eq(5, convertToInt("v"));
+	ck_assert_uint_eq(10, convertToInt("x"));
+	ck_assert_uint_eq(50, convertToInt("l"));
+	ck_assert_uint_eq(100, convertToInt("c"));
+	ck_assert_uint_eq(500, convertToInt("d"));
+	ck_assert_uint_eq(1000, convertToInt("m"));
+}
+END_TEST
+
+START_TEST (iv_represents_four)
+{
+	ck_assert_uint_eq(4, convertToInt("iv"));
+}
+END_TEST
+
 Suite * calculator_suite(void) {
 	Suite *s;
 	TCase *tc_core;
@@ -33,6 +69,11 @@ Suite * calculator_suite(void) {
     tcase_add_test(tc_core, one_plus_one_is_two);
     tcase_add_test(tc_core, one_plus_two_is_three);
     tcase_add_test(tc_core, two_plus_two_is_four);
+    tcase_add_test(tc_core, i_represents_one);
+    tcase_add_test(tc_core, ii_represents_two);
+    tcase_add_test(tc_core, v_represents_five);
+    tcase_add_test(tc_core, single_letters_by_themseleves_represent_core_values);
+    tcase_add_test(tc_core, iv_represents_four);
     suite_add_tcase(s, tc_core);
 
     return s;
