@@ -10,15 +10,29 @@ START_TEST (one_plus_one_is_two)
 }
 END_TEST
 
+START_TEST (one_plus_two_is_three)
+{
+	ck_assert_str_eq("iii", add("i", "ii"));
+}
+END_TEST
+
+START_TEST (two_plus_two_is_four)
+{
+	ck_assert_str_eq("iv", add("ii", "ii"));
+}
+END_TEST
+
 Suite * calculator_suite(void) {
 	Suite *s;
 	TCase *tc_core;
 
-    s = suite_create("Calculator");
+    s = suite_create("Calculator Tests");
 
     tc_core = tcase_create("Core");
 
     tcase_add_test(tc_core, one_plus_one_is_two);
+    tcase_add_test(tc_core, one_plus_two_is_three);
+    tcase_add_test(tc_core, two_plus_two_is_four);
     suite_add_tcase(s, tc_core);
 
     return s;
