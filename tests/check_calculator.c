@@ -58,6 +58,30 @@ START_TEST (iv_represents_four)
 }
 END_TEST
 
+START_TEST (xix_represents_nineteen)
+{
+	ck_assert_uint_eq(19, convertToInt("xix"));
+}
+END_TEST
+
+START_TEST (mmmcdlvi_represents_three_thousand_four_hundred_fifty_six)
+{
+	ck_assert_uint_eq(3456, convertToInt("mmmcdlvi"));
+}
+END_TEST
+
+START_TEST (uppercase_letters_also_represent_things)
+{
+	ck_assert_uint_eq(1, convertToInt("I"));
+	ck_assert_uint_eq(5, convertToInt("V"));
+	ck_assert_uint_eq(10, convertToInt("X"));
+	ck_assert_uint_eq(50, convertToInt("L"));
+	ck_assert_uint_eq(100, convertToInt("C"));
+	ck_assert_uint_eq(500, convertToInt("D"));
+	ck_assert_uint_eq(1000, convertToInt("M"));
+}
+END_TEST
+
 Suite * calculator_suite(void) {
 	Suite *s;
 	TCase *tc_core;
@@ -74,6 +98,9 @@ Suite * calculator_suite(void) {
     tcase_add_test(tc_core, v_represents_five);
     tcase_add_test(tc_core, single_letters_by_themseleves_represent_core_values);
     tcase_add_test(tc_core, iv_represents_four);
+    tcase_add_test(tc_core, xix_represents_nineteen);
+    tcase_add_test(tc_core, mmmcdlvi_represents_three_thousand_four_hundred_fifty_six);
+    tcase_add_test(tc_core, uppercase_letters_also_represent_things);
     suite_add_tcase(s, tc_core);
 
     return s;

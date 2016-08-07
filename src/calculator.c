@@ -15,19 +15,43 @@ char * add(char *input1, char *input2) {
 	}
 }
 
+int lookUpDigitValue(char digit) {
+	int result;
+	
+	switch (digit) {
+		case 'i': case 'I': result = 1; break;
+		case 'v': case 'V': result = 5; break;
+		case 'x': case 'X': result = 10; break;
+		case 'l': case 'L': result = 50; break;
+		case 'c': case 'C': result = 100; break;
+		case 'd': case 'D': result = 500; break;
+		case 'm': case 'M': result = 1000; break;
+		default: result = 0; break;
+	}
+	
+	return result;
+}
+
 int convertToInt(char *numeral) {
-	int i;
 	int result = 0;
+	int i;
 	size_t length = strlen(numeral);
-	for (i = 0; i < length; i++) {
-		switch (numeral[i]) {
-			case 'i': result += 1; break;
-			case 'v': result += 5; break;
-			case 'x': result += 10; break;
-			case 'l': result += 50; break;
-			case 'c': result += 100; break;
-			case 'd': result += 500; break;
-			case 'm': result += 1000; break;
+	char currentDigit;
+	char prevDigit;
+	
+	for (i = length - 1; i >= 0; i--) {
+		currentDigit = numeral[i];
+		if (i < length - 1) {
+			prevDigit = numeral[i + 1];
+		}
+		
+		int prevDigitValue = lookUpDigitValue(prevDigit);
+		int currentDigitValue = lookUpDigitValue(currentDigit);
+		
+		if (currentDigitValue < prevDigitValue) {
+			result -= currentDigitValue;
+		} else {
+			result += currentDigitValue;
 		}
 	}
 	return result;
