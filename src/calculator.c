@@ -57,7 +57,7 @@ int convertToInt(char *numeral) {
 int appendCharAndDecrement(char *resultString, char *toAppend, int value, int suspectValue) {
 	int resultantValue = value;
 	if (resultantValue - suspectValue >= 0) {
-		realloc(resultString, strlen(toAppend));
+		resultString = realloc(resultString, strlen(toAppend));
 		strcat(resultString, toAppend);
 		resultantValue -= suspectValue;
 	}

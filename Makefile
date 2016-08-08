@@ -33,7 +33,6 @@ $(BUILD_DIR)/%.o : $(SRC_DIR)/%.c
 
 #test build
 $(BUILD_DIR)/$(TEST_TARGET) : $(TEST_OBJS) $(BUILD_DIR)/calculator.o
-	$(SOURCES) -= $(BUILD_DIR)/main.c; \
 	gcc -g -Wall -o $@ $^ $(TEST_LIBS)
 
 $(BUILD_DIR)/%.o : $(TEST_DIR)/%.c
