@@ -11,11 +11,18 @@ TEST_SOURCES = $(wildcard $(TEST_DIR)/*.c)
 TEST_OBJS = $(patsubst $(TEST_DIR)/%.c,$(BUILD_DIR)/%.o,$(TEST_SOURCES))
 TEST_LIBS = -lcheck -lm -lpthread -lrt
 
-all: build $(BUILD_DIR)/$(TARGET)
-check: build $(BUILD_DIR)/$(TEST_TARGET)
+all: build $(BUILD_DIR)/$(TARGET) run
+	
+check: build $(BUILD_DIR)/$(TEST_TARGET) run_tests
 
 build:
 	mkdir -p $(BUILD_DIR)
+	
+run_tests: $(BUILD_DIR)/$(TEST_TARGET)
+	$(BUILD_DIR)/$(TEST_TARGET)
+	
+run: $(BUILD_DIR)/$(TARGET)
+	$(BUILD_DIR)/$(TARGET)
 	
 # main build
 $(BUILD_DIR)/$(TARGET) : $(OBJS)
@@ -25,7 +32,8 @@ $(BUILD_DIR)/%.o : $(SRC_DIR)/%.c
 	gcc -Wall -o $@ -c $<
 
 #test build
-$(BUILD_DIR)/$(TEST_TARGET) : $(TEST_OBJS) $(OBJS)
+$(BUILD_DIR)/$(TEST_TARGET) : $(TEST_OBJS) $(BUILD_DIR)/calculator.o
+	$(SOURCES) -= $(BUILD_DIR)/main.c; \
 	gcc -g -Wall -o $@ $^ $(TEST_LIBS)
 
 $(BUILD_DIR)/%.o : $(TEST_DIR)/%.c
@@ -34,6 +42,7 @@ $(BUILD_DIR)/%.o : $(TEST_DIR)/%.c
 #dependencies
 $(BUILD_DIR)/check_calculator.o : $(SRC_DIR)/calculator.h
 $(BUILD_DIR)/calculator.o : $(SRC_DIR)/calculator.h
+$(BUILD_DIR)/main.o : $(SRC_DIR)/calculator.h
 
 clean:
 	rm -rf $(BUILD_DIR)
