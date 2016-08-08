@@ -96,99 +96,111 @@ END_TEST
 
 START_TEST (one_is_represented_by_the_letter_I)
 {
-	char * result = convertToNumeral(1);
+	result = convertToNumeral(1);
 	ck_assert_str_eq("I", result);
 }
 END_TEST
 
 START_TEST (five_is_represented_by_the_letter_V)
 {
-	char * result = convertToNumeral(5);
+	result = convertToNumeral(5);
 	ck_assert_str_eq("V", result);
-	free(result);
 }
 END_TEST
 
 START_TEST (four_is_represented_by_the_sequence_IV)
 {
-	char * result = convertToNumeral(4);
+	result = convertToNumeral(4);
 	ck_assert_str_eq("IV", result);
 }
 END_TEST
 
 START_TEST (two_is_represented_by_the_sequence_II)
 {
-	char * result = convertToNumeral(2);
+	result = convertToNumeral(2);
 	ck_assert_str_eq("II", result);
 }
 END_TEST
 
 START_TEST (nine_is_represented_by_the_sequence_IX)
 {
-	char * result = convertToNumeral(9);
+	result = convertToNumeral(9);
 	ck_assert_str_eq("IX", result);
 }
 END_TEST
 
 START_TEST (forty_is_represented_by_the_sequence_XL)
 {
-	char * result = convertToNumeral(40);
+	result = convertToNumeral(40);
 	ck_assert_str_eq("XL", result);
 }
 END_TEST
 
 START_TEST (ninety_is_represented_by_the_sequence_XC)
 {
-	char * result = convertToNumeral(90);
+	result = convertToNumeral(90);
 	ck_assert_str_eq("XC", result);
 }
 END_TEST
 
 START_TEST (four_hundred_is_represented_by_the_sequence_CD)
 {
-	char * result = convertToNumeral(400);
+	result = convertToNumeral(400);
 	ck_assert_str_eq("CD", result);
 }
 END_TEST
 
 START_TEST (nine_hundred_is_represented_by_the_sequence_CM)
 {
-	char * result = convertToNumeral(900);
+	result = convertToNumeral(900);
 	ck_assert_str_eq("CM", result);
 }
 END_TEST
 
 START_TEST (three_thousand_four_hundred_fifty_six_is_represented_by_the_sequence_mmmcdlvi)
 {
-	char * result = convertToNumeral(3456);
+	result = convertToNumeral(3456);
 	ck_assert_str_eq("MMMCDLVI", result);
 }
 END_TEST
 
 START_TEST (add_returns_concatenated_result_in_correct_logical_order)
 {
-	char * result = add("XIV", "LX");
+	result = add("XIV", "LX");
 	ck_assert_str_eq("LXXIV", result);
 }
 END_TEST
 
 START_TEST (ii_minus_i_is_i)
 {
-	char * result = subtractSecondFromFirst("ii", "i");
+	result = subtractSecondFromFirst("ii", "i");
 	ck_assert_str_eq("I", result);
 }
 END_TEST
 
 START_TEST (XVII_minus_IX_is_VII)
 {
-	char * result = subtractSecondFromFirst("XVII", "IX");
+	result = subtractSecondFromFirst("XVII", "IX");
 	ck_assert_str_eq("VIII", result);
+}
+END_TEST
+
+START_TEST (mcxi_represents_one_one_one_one)
+{
+	ck_assert_uint_eq(1111, convertToInt("mcxi"));
+}
+END_TEST
+
+START_TEST (convertToInt_works_twice_in_a_row)
+{
+	ck_assert_uint_eq(1111, convertToInt("mcxi"));
+	ck_assert_uint_eq(1111, convertToInt("mcxi"));
 }
 END_TEST
 
 START_TEST (MMMCMXCIX_minus_MCXI_is_MMDCCCLXXXVIII)
 {
-	char * result = subtractSecondFromFirst("MMMCMXCIX", "MCXI");
+	result = subtractSecondFromFirst("MMMCMXCIX", "MCXI");
 	ck_assert_str_eq("MMDCCCLXXXVIII", result);
 }
 END_TEST
@@ -210,6 +222,8 @@ Suite * calculator_suite(void) {
     tcase_add_test(tc_convert_to_int, xix_represents_nineteen);
     tcase_add_test(tc_convert_to_int, mmmcdlvi_represents_three_thousand_four_hundred_fifty_six);
     tcase_add_test(tc_convert_to_int, uppercase_letters_also_represent_things);
+    tcase_add_test(tc_convert_to_int, mcxi_represents_one_one_one_one);
+    tcase_add_test(tc_convert_to_int, convertToInt_works_twice_in_a_row);
     
     tc_convert_to_numeral = tcase_create("Convert To Numeral");
     tcase_add_checked_fixture(tc_convert_to_numeral, setup, teardown);
@@ -223,7 +237,6 @@ Suite * calculator_suite(void) {
     tcase_add_test(tc_convert_to_numeral, four_hundred_is_represented_by_the_sequence_CD);
     tcase_add_test(tc_convert_to_numeral, nine_hundred_is_represented_by_the_sequence_CM);
     tcase_add_test(tc_convert_to_numeral, three_thousand_four_hundred_fifty_six_is_represented_by_the_sequence_mmmcdlvi);
-    tcase_add_test(tc_convert_to_numeral, add_returns_concatenated_result_in_correct_logical_order);
     
     tc_core = tcase_create("Addition and Subtraction");
     tcase_add_checked_fixture(tc_core, setup, teardown);
@@ -231,6 +244,7 @@ Suite * calculator_suite(void) {
     tcase_add_test(tc_core, one_plus_one_is_two);
     tcase_add_test(tc_core, one_plus_two_is_three);
     tcase_add_test(tc_core, two_plus_two_is_four);
+    tcase_add_test(tc_core, add_returns_concatenated_result_in_correct_logical_order);
     
     tcase_add_test(tc_core, ii_minus_i_is_i);
     tcase_add_test(tc_core, XVII_minus_IX_is_VII);

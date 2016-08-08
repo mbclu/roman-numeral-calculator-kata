@@ -1,7 +1,6 @@
 #include "calculator.h"
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
 char * add(char *input1, char *input2) {
 	return convertToNumeral(convertToInt(input1) + convertToInt(input2));
@@ -30,10 +29,11 @@ int lookUpDigitValue(char digit) {
 
 int convertToInt(char *numeral) {
 	int result = 0;
+	char currentDigit = '\0';
+	char prevDigit = '\0';
+	
 	int i;
 	size_t length = strlen(numeral);
-	char currentDigit;
-	char prevDigit;
 	
 	for (i = length - 1; i >= 0; --i) {
 		currentDigit = numeral[i];
@@ -50,6 +50,7 @@ int convertToInt(char *numeral) {
 			result += currentDigitValue;
 		}
 	}
+	
 	return result;
 }
 
