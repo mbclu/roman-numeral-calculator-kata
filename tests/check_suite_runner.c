@@ -13,8 +13,7 @@ Suite * make_master_suite(void) {
 	
 int main() {
 	int number_failed;
-    Suite *s;
-    SRunner *sr;
+	SRunner *sr;
 
     sr = srunner_create(make_master_suite());
     srunner_add_suite (sr, make_converter_suite());

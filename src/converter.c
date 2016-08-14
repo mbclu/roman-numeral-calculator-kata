@@ -60,7 +60,7 @@ int appendCharAndDecrement(char *resultString, char *toAppend, int value, int su
 }
 
 char * convertToNumeral(int value) {
-	char *result = malloc(sizeof(char));
+	char *result = calloc(1, sizeof(char));
 	int suspectValues[] = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
 	char *suspectCharacters[] = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
 	int suspectIndex = 0;
@@ -75,6 +75,10 @@ char * convertToNumeral(int value) {
 			++suspectIndex;
 		}
 	}
+	
+	size_t resultSize = strlen(result);
+	result = realloc(result, resultSize + 1);
+	result[resultSize] = '\0';
 	
 	return result;
 }
