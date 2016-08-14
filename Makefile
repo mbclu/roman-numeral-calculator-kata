@@ -11,7 +11,7 @@ TEST_SOURCES = $(wildcard $(TEST_DIR)/*.c)
 TEST_OBJS = $(patsubst $(TEST_DIR)/%.c,$(BUILD_DIR)/%.o,$(TEST_SOURCES))
 TEST_LIBS = -lcheck -lm -lpthread -lrt
 
-all: build $(BUILD_DIR)/$(TARGET) run
+all: build $(BUILD_DIR)/$(TARGET)
 	
 check: build $(BUILD_DIR)/$(TEST_TARGET) run_tests
 
@@ -21,7 +21,7 @@ build:
 run_tests: $(BUILD_DIR)/$(TEST_TARGET)
 	$(BUILD_DIR)/$(TEST_TARGET)
 	
-run: $(BUILD_DIR)/$(TARGET)
+run: clean build $(BUILD_DIR)/$(TARGET)
 	$(BUILD_DIR)/$(TARGET)
 	
 # main build
