@@ -25,14 +25,14 @@ run: $(BUILD_DIR)/$(TARGET)
 	$(BUILD_DIR)/$(TARGET)
 	
 # main build
-$(BUILD_DIR)/$(TARGET) : $(OBJS)
+$(BUILD_DIR)/$(TARGET) : $(OBJS) main.o
 	gcc -Wall -o $@ $^
 
 $(BUILD_DIR)/%.o : $(SRC_DIR)/%.c
 	gcc -Wall -o $@ -c $<
 
 #test build
-$(BUILD_DIR)/$(TEST_TARGET) : $(TEST_OBJS) $(BUILD_DIR)/calculator.o
+$(BUILD_DIR)/$(TEST_TARGET) : $(TEST_OBJS) $(OBJS)
 	gcc -g -Wall -o $@ $^ $(TEST_LIBS)
 
 $(BUILD_DIR)/%.o : $(TEST_DIR)/%.c
@@ -45,3 +45,4 @@ $(BUILD_DIR)/main.o : $(SRC_DIR)/calculator.h
 
 clean:
 	rm -rf $(BUILD_DIR)
+	rm -f main.o

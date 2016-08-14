@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "calculator.h"
+#include "src/calculator.h"
 
 void printUsage() {
 	printf("Usage:\n");
