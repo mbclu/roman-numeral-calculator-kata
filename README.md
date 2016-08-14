@@ -23,3 +23,7 @@ Use ```make check``` to run the tests
   * Subtraction can result in a number less than or equal to 0
    
 In product design it is important to weigh the tradeoffs and risks associated with hanlding such errors in software vs. in hardware. For example it would be unlikely for a Roman Numeral calulcator as a product to include methods of invalid input such as `H` and it would be unnecessary to validate this input in software. In systems were safety is a concern, there would likely be reduntant hardware and software checks to mitigate and/or prevent exception scenarios from occurring and reduce the impact to the user. I would be happy to discuss the desired user experience for invalid inputs to the system with a Product Owner and determine requirements for handling such exception scenarios.
+
+Note that there is an error when the test run finishes.
+```Error in `build/check_rnc.exe': double free or corruption (out)```
+I have determined this is due to the check framework. The srunner_free(SRunner *) method started throwing this error when I added more than one suite to the runner.
