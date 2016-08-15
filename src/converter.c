@@ -4,7 +4,7 @@
 #include "converter.h"
 #include "roman_numerals.h"
 
-int lookUpDigitValue(char digit) {
+int lookUpDigitValue(const int digit) {
 	int result;
 	
 	switch (digit) {
@@ -21,7 +21,7 @@ int lookUpDigitValue(char digit) {
 	return result;
 }
 
-int convertToInt(char *numeral) {
+int convertToInt(const char *numeral) {
 	int result = 0;
 	char currentDigit = '\0';
 	char prevDigit = '\0';
@@ -48,7 +48,7 @@ int convertToInt(char *numeral) {
 	return result;
 }
 
-int appendCharAndDecrement(char *resultString, int value, RomanNumeralValues toAppend) {
+int appendCharAndDecrement(char *resultString, const int value, const RomanNumeralValues toAppend) {
 	int resultantValue = value;
 	
 	if (resultantValue - toAppend.value >= 0) {
@@ -60,15 +60,16 @@ int appendCharAndDecrement(char *resultString, int value, RomanNumeralValues toA
 	return resultantValue;
 }
 
-char * convertToNumeral(int value) {
+char * convertToNumeral(const int value) {
 	char *result = calloc(1, sizeof(char));
 	int suspectIndex = 0;
-	int newValue = value;
+	int valueRemaining = value;
+	int previousValue = valueRemaining;
 	
-	while(newValue > 0) {
-		newValue = appendCharAndDecrement(result, value, romanNumeralValues[suspectIndex]);
-		if (newValue != value) {
-			value = newValue;
+	while(valueRemaining > 0) {
+		valueRemaining = appendCharAndDecrement(result, valueRemaining, romanNumeralValues[suspectIndex]);
+		if (valueRemaining != previousValue) {
+			previousValue = valueRemaining;
 			suspectIndex = 0;
 		} else {
 			++suspectIndex;

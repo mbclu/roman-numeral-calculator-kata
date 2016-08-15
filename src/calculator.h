@@ -1,7 +1,7 @@
 #ifndef CALCULATOR_H_
 #define CALCULATOR_H_
 
-char * add(char *input1, char *input2);
-char * subtractSecondFromFirst(char *input1, char *input2);
+char * add(const char *input1, const char *input2);
+char * subtractSecondFromFirst(const char *input1, const char *input2);
 
 #endif //CALCULATOR_H_
