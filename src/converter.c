@@ -47,13 +47,13 @@ int convertToInt(char *numeral) {
 	return result;
 }
 
-int appendCharAndDecrement(char *resultString, char *toAppend, int value, int suspectValue) {
+int appendCharAndDecrement(char *resultString, int value, RomanNumeralValues toAppend) {
 	int resultantValue = value;
 	
-	if (resultantValue - suspectValue >= 0) {
-		resultString = realloc(resultString, strlen(toAppend));
-		strcat(resultString, toAppend);
-		resultantValue -= suspectValue;
+	if (resultantValue - toAppend.value >= 0) {
+		resultString = realloc(resultString, strlen(toAppend.numeral));
+		strcat(resultString, toAppend.numeral);
+		resultantValue -= toAppend.value;
 	}
 	
 	return resultantValue;
@@ -61,13 +61,11 @@ int appendCharAndDecrement(char *resultString, char *toAppend, int value, int su
 
 char * convertToNumeral(int value) {
 	char *result = calloc(1, sizeof(char));
-	int suspectValues[] = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
-	char *suspectCharacters[] = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
 	int suspectIndex = 0;
 	int newValue = value;
 	
 	while(newValue > 0) {
-		newValue = appendCharAndDecrement(result, suspectCharacters[suspectIndex], value, suspectValues[suspectIndex]);
+		newValue = appendCharAndDecrement(result, value, romanNumeralValues[suspectIndex]);
 		if (newValue != value) {
 			value = newValue;
 			suspectIndex = 0;
