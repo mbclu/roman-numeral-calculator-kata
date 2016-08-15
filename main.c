@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 #include "src/calculator.h"
 
 void printUsage() {
@@ -7,6 +8,10 @@ void printUsage() {
 	printf("\t1.) enter the first Roman Numeral and press return\n");
 	printf("\t2.) enter an operation (either `+` or `-`) and press return\n");
 	printf("\t3.) enter a second Roman Numeral and press return\n");
+}
+
+void signal_catch_interrupts(int signal) {
+	printf("Invalid input received. Please run the program again.\n");
 }
 
 int main() {
@@ -23,6 +28,15 @@ int main() {
 	getchar();
 	scanf(" %s", secondInput);
 	
+	int ret;
+
+    ret = signal(SIGINT, signal_catch_interrupts);
+
+    if(ret == SIG_ERR) {
+		printf("Error: unable to set signal handler.\n");
+		exit(0);
+	}
+   
 	if ('+' == operator) {
 		result = add(firstInput, secondInput);
 		printf("%s + %s = %s\n", firstInput, secondInput, result);

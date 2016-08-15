@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <check.h>
 #include <math.h>
+#include <signal.h>
 
 #include "check_suites.h"
 
@@ -158,10 +159,16 @@ START_TEST (convertToInt_works_twice_in_a_row)
 }
 END_TEST
 
+START_TEST (calling_convert_to_int_with_invalid_character_results_in_signal_raised)
+{
+	ck_assert_uint_eq(0, convertToInt("F"));
+}
+END_TEST
 Suite * make_converter_suite(void) {
 	Suite *s;
 	TCase *tc_convert_to_int;
 	TCase *tc_convert_to_numeral;
+	TCase *tc_convert_validations;
 
     s = suite_create("Converter Tests");
 
@@ -190,8 +197,12 @@ Suite * make_converter_suite(void) {
     tcase_add_test(tc_convert_to_numeral, nine_hundred_is_represented_by_the_sequence_CM);
     tcase_add_test(tc_convert_to_numeral, three_thousand_four_hundred_fifty_six_is_represented_by_the_sequence_mmmcdlvi);
     
+    tc_convert_validations = tcase_create("Convert Validations");
+    tcase_add_test_raise_signal(tc_convert_validations, calling_convert_to_int_with_invalid_character_results_in_signal_raised, SIGINT);
+    
     suite_add_tcase(s, tc_convert_to_int);
     suite_add_tcase(s, tc_convert_to_numeral);
+    suite_add_tcase(s, tc_convert_validations);
 
     return s;
 }

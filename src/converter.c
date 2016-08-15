@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <signal.h>
 
 #include "converter.h"
 #include "roman_numerals.h"
@@ -22,10 +23,16 @@ int lookUpDigitValue(const char digit) {
 	for (i = 0; i < NUM_ROMAN_LOOKUP_VALUES; i++) {
 		if (0 == strcmp(upperCaseString, romanNumeralValues[i].numeral)) {
 			result = romanNumeralValues[i].value;
+			break;
 		}
 	}
-	
+
 	free(upperCaseString);
+   
+	if (digit != 0 && result == 0) {
+		raise(SIGINT);
+	}
+	
 	return result;
 }
 
@@ -43,10 +50,9 @@ int convertToInt(const char *numeral) {
 			prevDigit = numeral[i + 1];
 		}
 		
-		int prevDigitValue = lookUpDigitValue(prevDigit);
 		int currentDigitValue = lookUpDigitValue(currentDigit);
 		
-		if (currentDigitValue < prevDigitValue) {
+		if (currentDigitValue < lookUpDigitValue(prevDigit)) {
 			result -= currentDigitValue;
 		} else {
 			result += currentDigitValue;
