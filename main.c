@@ -30,7 +30,7 @@ int main() {
 		result = subtractSecondFromFirst(firstInput, secondInput);
 		printf("%s - %s = %s\n", firstInput, secondInput, result);
 	} else {
-		printf("Invalid operation!\n");
+		printf("`%c` is an invalid operator! Please use either `+` or `-`\n", operator);
 	}
 	
 	free(firstInput);

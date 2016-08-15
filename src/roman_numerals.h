@@ -1,6 +1,8 @@
 #ifndef ROMAN_NUMERALS_H_
 #define ROMAN_NUMERALS_H_
 
+static const int NUM_ROMAN_LOOKUP_VALUES = 13;
+
 typedef struct roman_numeral_values_t {
 	int value;
 	char *numeral;

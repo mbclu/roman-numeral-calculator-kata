@@ -1,23 +1,31 @@
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "converter.h"
 #include "roman_numerals.h"
 
-int lookUpDigitValue(const int digit) {
-	int result;
+char * digitToUpper(const int digit) {
+	const int copyLength = 1;
+	char *digitString = calloc(copyLength, sizeof(char));
+	char upperCaseDigit = (char) toupper(digit);
+	memcpy(digitString, &upperCaseDigit, copyLength);
+
+	return digitString;
+}
+
+int lookUpDigitValue(const char digit) {
+	char *upperCaseString = digitToUpper(digit);
+	int result = 0;
+	int i;
 	
-	switch (digit) {
-		case 'i': case 'I': result = 1; break;
-		case 'v': case 'V': result = 5; break;
-		case 'x': case 'X': result = 10; break;
-		case 'l': case 'L': result = 50; break;
-		case 'c': case 'C': result = 100; break;
-		case 'd': case 'D': result = 500; break;
-		case 'm': case 'M': result = 1000; break;
-		default: result = 0; break;
+	for (i = 0; i < NUM_ROMAN_LOOKUP_VALUES; i++) {
+		if (0 == strcmp(upperCaseString, romanNumeralValues[i].numeral)) {
+			result = romanNumeralValues[i].value;
+		}
 	}
 	
+	free(upperCaseString);
 	return result;
 }
 
