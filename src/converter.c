@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "converter.h"
+#include "roman_numerals.h"
 
 int lookUpDigitValue(char digit) {
 	int result;
