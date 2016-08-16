@@ -1,32 +1,28 @@
 #include "converter.h"
 
-char * digitToUpper(const int digit) {
-	const int copyLength = 1;
-	char *digitString = calloc(copyLength, sizeof(char));
+void copyDigitToUpperCaseString(char *toUpperResult, const int digit) {
 	char upperCaseDigit = (char) toupper(digit);
-	memcpy(digitString, &upperCaseDigit, copyLength);
-
-	return digitString;
+	memcpy(toUpperResult, &upperCaseDigit, 1);
 }
 
 int lookUpDigitValue(const char digit) {
-	char *upperCaseString = digitToUpper(digit);
+	char upperCaseString;
 	int result = 0;
 	int i;
-	
+
+	copyDigitToUpperCaseString(&upperCaseString, digit);
+
 	for (i = 0; i < NUM_ROMAN_LOOKUP_VALUES; i++) {
-		if (0 == strcmp(upperCaseString, romanNumeralValues[i].numeral)) {
+		if (0 == strcmp(&upperCaseString, romanNumeralValues[i].numeral)) {
 			result = romanNumeralValues[i].value;
 			break;
 		}
 	}
 
-	free(upperCaseString);
-   
 	if (digit != 0 && result == 0) {
 		raise(SIGINT);
 	}
-	
+
 	return result;
 }
 
