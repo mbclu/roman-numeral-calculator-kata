@@ -19,30 +19,32 @@ int lookUpDigitValue(const char digit) {
 		}
 	}
 
-	if (digit != 0 && result == 0) {
+	if (result == 0) {
 		raise(SIGINT);
 	}
 
 	return result;
 }
 
-int convertToInt(const char *numeral) {
+int convertToInt(const char *romanNumeral) {
 	int result = 0;
 	char currentDigit = '\0';
 	char prevDigit = '\0';
 	
 	int i;
-	size_t length = strlen(numeral);
+	size_t length = strlen(romanNumeral);
 	
 	for (i = length - 1; i >= 0; --i) {
-		currentDigit = numeral[i];
-		if (i < length - 1) {
-			prevDigit = numeral[i + 1];
-		}
-		
+		currentDigit = romanNumeral[i];
 		int currentDigitValue = lookUpDigitValue(currentDigit);
 		
-		if (currentDigitValue < lookUpDigitValue(prevDigit)) {
+		int prevDigitValue = 0;
+		if (i < length - 1) {
+			prevDigit = romanNumeral[i + 1];
+			prevDigitValue = lookUpDigitValue(prevDigit);
+		}
+		
+		if (currentDigitValue < prevDigitValue) {
 			result -= currentDigitValue;
 		} else {
 			result += currentDigitValue;

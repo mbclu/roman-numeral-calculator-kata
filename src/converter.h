@@ -9,7 +9,7 @@
 #include "constants.h"
 #include "roman_numerals.h"
 
-int convertToInt(const char *numeral);
+int convertToInt(const char *romanNumeral);
 void convertToNumeral(char *romanResult, const int arabicValue);
 
 #endif //CONVERTER_H_
