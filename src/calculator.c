@@ -1,6 +1,7 @@
 #include "calculator.h"
 
 void add(char *sum, const char *augend, const char *addend) {
+	
 	convertToNumeral(sum, convertToInt(augend) + convertToInt(addend));
 }
 

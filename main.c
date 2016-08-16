@@ -3,22 +3,14 @@
 #include <signal.h>
 #include "src/calculator.h"
 
-void printUsage() {
-	printf("Usage:\n");
-	printf("\t1.) enter the first Roman Numeral and press return\n");
-	printf("\t2.) enter an operation (either `+` or `-`) and press return\n");
-	printf("\t3.) enter a second Roman Numeral and press return\n");
-}
-
-void signal_catch_interrupts(int signal) {
-	printf("Invalid input received. Please run the program again.\n");
-}
+static void printUsage(void);
+static void signal_catch_interrupts(int signal);
 
 int main() {
-	char *firstInput = malloc(30);
+	char *firstInput = calloc(MAX_ROMAN_NUMERAL_STRING_LENGTH, sizeof(char));
+	char *secondInput = calloc(MAX_ROMAN_NUMERAL_STRING_LENGTH, sizeof(char));
+	char *result = calloc(MAX_ROMAN_NUMERAL_STRING_LENGTH, sizeof(char));
 	char operator;
-	char *secondInput = malloc(30);
-	char *result;
 	
 	printUsage();
 	
@@ -38,10 +30,10 @@ int main() {
 	}
    
 	if ('+' == operator) {
-		result = add(firstInput, secondInput);
+		add(result, firstInput, secondInput);
 		printf("%s + %s = %s\n", firstInput, secondInput, result);
 	} else if('-' == operator) {
-		result = subtractSecondFromFirst(firstInput, secondInput);
+		subtract(result, firstInput, secondInput);
 		printf("%s - %s = %s\n", firstInput, secondInput, result);
 	} else {
 		printf("`%c` is an invalid operator! Please use either `+` or `-`\n", operator);
@@ -52,4 +44,15 @@ int main() {
 	free(result);
 	
 	return 0;
+}
+
+static void printUsage(void) {
+	printf("Usage:\n");
+	printf("\t1.) enter the first Roman Numeral and press return\n");
+	printf("\t2.) enter an operation (either `+` or `-`) and press return\n");
+	printf("\t3.) enter a second Roman Numeral and press return\n");
+}
+
+static void signal_catch_interrupts(int signal) {
+	printf("Invalid input received. Please run the program again.\n");
 }
