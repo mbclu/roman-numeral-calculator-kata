@@ -1,32 +1,10 @@
 #include "converter.h"
 
-void copyDigitToUpperCaseString(char *toUpperResult, const int digit) {
-	char upperCaseDigit = (char) toupper(digit);
-	memcpy(toUpperResult, &upperCaseDigit, 1);
-}
+static void copyDigitToUpperCaseString(char *toUpperResult, const int digit);
+static const int lookUpDigitValue(const char digit);
+static const int appendCharAndDecrement(char *resultString, const int value, const RomanNumeralValues toAppend);
 
-int lookUpDigitValue(const char digit) {
-	char upperCaseString;
-	int result = 0;
-	int i;
-
-	copyDigitToUpperCaseString(&upperCaseString, digit);
-
-	for (i = 0; i < NUM_ROMAN_LOOKUP_VALUES; i++) {
-		if (0 == strcmp(&upperCaseString, romanNumeralValues[i].numeral)) {
-			result = romanNumeralValues[i].value;
-			break;
-		}
-	}
-
-	if (result == 0) {
-		raise(SIGINT);
-	}
-
-	return result;
-}
-
-int convertToInt(const char *romanNumeral) {
+const int convertToInt(const char *romanNumeral) {
 	int result = 0;
 	char currentDigit = '\0';
 	char prevDigit = '\0';
@@ -54,18 +32,6 @@ int convertToInt(const char *romanNumeral) {
 	return result;
 }
 
-int appendCharAndDecrement(char *resultString, const int value, const RomanNumeralValues toAppend) {
-	int resultantValue = value;
-	
-	if (resultantValue - toAppend.value >= 0) {
-		resultString = realloc(resultString, strlen(toAppend.numeral));
-		strcat(resultString, toAppend.numeral);
-		resultantValue -= toAppend.value;
-	}
-	
-	return resultantValue;
-}
-
 void convertToNumeral(char *romanResult, const int arabicValue) {
 	int suspectIndex = 0;
 	int valueRemaining = arabicValue;
@@ -84,4 +50,42 @@ void convertToNumeral(char *romanResult, const int arabicValue) {
 	size_t resultSize = strlen(romanResult);
 	romanResult = realloc(romanResult, resultSize + 1);
 	romanResult[resultSize] = '\0';
+}
+
+static const int lookUpDigitValue(const char digit) {
+	char upperCaseString;
+	int result = 0;
+	int i;
+
+	copyDigitToUpperCaseString(&upperCaseString, digit);
+
+	for (i = 0; i < NUM_ROMAN_LOOKUP_VALUES; i++) {
+		if (0 == strcmp(&upperCaseString, romanNumeralValues[i].numeral)) {
+			result = romanNumeralValues[i].value;
+			break;
+		}
+	}
+
+	if (result == 0) {
+		raise(SIGINT);
+	}
+
+	return result;
+}
+
+static void copyDigitToUpperCaseString(char *toUpperResult, const int digit) {
+	char upperCaseDigit = (char) toupper(digit);
+	memcpy(toUpperResult, &upperCaseDigit, 1);
+}
+
+static const int appendCharAndDecrement(char *resultString, const int value, const RomanNumeralValues toAppend) {
+	int resultantValue = value;
+	
+	if (resultantValue - toAppend.value >= 0) {
+		resultString = realloc(resultString, strlen(toAppend.numeral));
+		strcat(resultString, toAppend.numeral);
+		resultantValue -= toAppend.value;
+	}
+	
+	return resultantValue;
 }
