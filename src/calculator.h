@@ -3,7 +3,7 @@
 
 #include "converter.h"
 
-void add(char *romanResult, const char *romanInput1, const char *romanInput2);
-void subtractSecondFromFirst(char *romanResult, const char *romanInput1, const char *romanInput2);
+void add(char *romanSum, const char *augend, const char *addend);
+void subtract(char *romanDifference, const char *minuend, const char *subtrahend);
 
 #endif //CALCULATOR_H_

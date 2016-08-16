@@ -46,21 +46,21 @@ END_TEST
 
 START_TEST (ii_minus_i_is_i)
 {
-	subtractSecondFromFirst(result, "ii", "i");
+	subtract(result, "ii", "i");
 	ck_assert_str_eq("I", result);
 }
 END_TEST
 
 START_TEST (XVII_minus_IX_is_VII)
 {
-	subtractSecondFromFirst(result, "XVII", "IX");
+	subtract(result, "XVII", "IX");
 	ck_assert_str_eq("VIII", result);
 }
 END_TEST
 
 START_TEST (MMMCMXCIX_minus_MCXI_is_MMDCCCLXXXVIII)
 {
-	subtractSecondFromFirst(result, "MMMCMXCIX", "MCXI");
+	subtract(result, "MMMCMXCIX", "MCXI");
 	ck_assert_str_eq("MMDCCCLXXXVIII", result);
 }
 END_TEST

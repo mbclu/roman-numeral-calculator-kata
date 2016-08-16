@@ -1,9 +1,11 @@
 #include "calculator.h"
 
-void add(char *romanResult, const char *romanInput1, const char *romanInput2) {
-	convertToNumeral(romanResult, convertToInt(romanInput1) + convertToInt(romanInput2));
+void add(char *romanSum, const char *augend, const char *addend) {
+	int arabicSum = convertToInt(augend) + convertToInt(addend);
+	convertToNumeral(romanSum, arabicSum);
 }
 
-void subtractSecondFromFirst(char *romanResult, const char *romanInput1, const char *romanInput2) {
-	convertToNumeral(romanResult, convertToInt(romanInput1) - convertToInt(romanInput2));
+void subtract(char *romanDifference, const char *minuend, const char *subtrahend) {
+	int arabicDifference = convertToInt(minuend) - convertToInt(subtrahend);
+	convertToNumeral(romanDifference, arabicDifference);
 }
