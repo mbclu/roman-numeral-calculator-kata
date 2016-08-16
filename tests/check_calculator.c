@@ -9,6 +9,7 @@
 char * result;
 
 void setup_calculator_tests() {
+	result = calloc(MAX_ROMAN_NUMERAL_STRING_LENGTH, sizeof(char));
 }
 
 void teardown_calculator_tests() {
@@ -17,49 +18,49 @@ void teardown_calculator_tests() {
 
 START_TEST (one_plus_one_is_two)
 {
-	result = add("i", "i");
+	add(result, "i", "i");
 	ck_assert_str_eq("II", result);
 }
 END_TEST
 
 START_TEST (one_plus_two_is_three)
 {
-	result = add("i", "ii");
+	add(result, "i", "ii");
 	ck_assert_str_eq("III", result);
 }
 END_TEST
 
 START_TEST (two_plus_two_is_four)
 {
-	result = add("ii", "ii");
+	add(result, "ii", "ii");
 	ck_assert_str_eq("IV", result);
 }
 END_TEST
 
 START_TEST (add_returns_concatenated_result_in_correct_logical_order)
 {
-	result = add("XIV", "LX");
+	add(result, "XIV", "LX");
 	ck_assert_str_eq("LXXIV", result);
 }
 END_TEST
 
 START_TEST (ii_minus_i_is_i)
 {
-	result = subtractSecondFromFirst("ii", "i");
+	subtractSecondFromFirst(result, "ii", "i");
 	ck_assert_str_eq("I", result);
 }
 END_TEST
 
 START_TEST (XVII_minus_IX_is_VII)
 {
-	result = subtractSecondFromFirst("XVII", "IX");
+	subtractSecondFromFirst(result, "XVII", "IX");
 	ck_assert_str_eq("VIII", result);
 }
 END_TEST
 
 START_TEST (MMMCMXCIX_minus_MCXI_is_MMDCCCLXXXVIII)
 {
-	result = subtractSecondFromFirst("MMMCMXCIX", "MCXI");
+	subtractSecondFromFirst(result, "MMMCMXCIX", "MCXI");
 	ck_assert_str_eq("MMDCCCLXXXVIII", result);
 }
 END_TEST

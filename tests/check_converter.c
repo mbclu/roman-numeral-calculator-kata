@@ -10,6 +10,7 @@
 char * result;
 
 void setup_converter_tests() {
+	result = calloc(MAX_ROMAN_NUMERAL_STRING_LENGTH, sizeof(char));
 }
 
 void teardown_converter_tests() {
@@ -78,70 +79,70 @@ END_TEST
 
 START_TEST (one_is_represented_by_the_letter_I)
 {
-	result = convertToNumeral(1);
+	convertToNumeral(result, 1);
 	ck_assert_str_eq("I", result);
 }
 END_TEST
 
 START_TEST (five_is_represented_by_the_letter_V)
 {
-	result = convertToNumeral(5);
+	convertToNumeral(result, 5);
 	ck_assert_str_eq("V", result);
 }
 END_TEST
 
 START_TEST (four_is_represented_by_the_sequence_IV)
 {
-	result = convertToNumeral(4);
+	convertToNumeral(result, 4);
 	ck_assert_str_eq("IV", result);
 }
 END_TEST
 
 START_TEST (two_is_represented_by_the_sequence_II)
 {
-	result = convertToNumeral(2);
+	convertToNumeral(result, 2);
 	ck_assert_str_eq("II", result);
 }
 END_TEST
 
 START_TEST (nine_is_represented_by_the_sequence_IX)
 {
-	result = convertToNumeral(9);
+	convertToNumeral(result, 9);
 	ck_assert_str_eq("IX", result);
 }
 END_TEST
 
 START_TEST (forty_is_represented_by_the_sequence_XL)
 {
-	result = convertToNumeral(40);
+	convertToNumeral(result, 40);
 	ck_assert_str_eq("XL", result);
 }
 END_TEST
 
 START_TEST (ninety_is_represented_by_the_sequence_XC)
 {
-	result = convertToNumeral(90);
+	convertToNumeral(result, 90);
 	ck_assert_str_eq("XC", result);
 }
 END_TEST
 
 START_TEST (four_hundred_is_represented_by_the_sequence_CD)
 {
-	result = convertToNumeral(400);
+	convertToNumeral(result, 400);
 	ck_assert_str_eq("CD", result);
 }
 END_TEST
 
 START_TEST (nine_hundred_is_represented_by_the_sequence_CM)
 {
-	result = convertToNumeral(900);
+	convertToNumeral(result, 900);
 	ck_assert_str_eq("CM", result);
 }
 END_TEST
 
 START_TEST (three_thousand_four_hundred_fifty_six_is_represented_by_the_sequence_mmmcdlvi)
 {
-	result = convertToNumeral(3456);
+	convertToNumeral(result, 3456);
 	ck_assert_str_eq("MMMCDLVI", result);
 }
 END_TEST

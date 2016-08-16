@@ -1,7 +1,9 @@
 #ifndef CALCULATOR_H_
 #define CALCULATOR_H_
 
-char * add(const char *input1, const char *input2);
-char * subtractSecondFromFirst(const char *input1, const char *input2);
+#include "converter.h"
+
+void add(char *romanResult, const char *romanInput1, const char *romanInput2);
+void subtractSecondFromFirst(char *romanResult, const char *romanInput1, const char *romanInput2);
 
 #endif //CALCULATOR_H_

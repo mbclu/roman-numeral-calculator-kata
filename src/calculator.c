@@ -1,10 +1,9 @@
 #include "calculator.h"
-#include "converter.h"
 
-char * add(const char *input1, const char *input2) {
-	return convertToNumeral(convertToInt(input1) + convertToInt(input2));
+void add(char *romanResult, const char *romanInput1, const char *romanInput2) {
+	convertToNumeral(romanResult, convertToInt(romanInput1) + convertToInt(romanInput2));
 }
 
-char * subtractSecondFromFirst(const char *input1, const char *input2) {
-	return convertToNumeral(convertToInt(input1) - convertToInt(input2));
+void subtractSecondFromFirst(char *romanResult, const char *romanInput1, const char *romanInput2) {
+	convertToNumeral(romanResult, convertToInt(romanInput1) - convertToInt(romanInput2));
 }

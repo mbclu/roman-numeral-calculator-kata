@@ -1,10 +1,4 @@
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include <signal.h>
-
 #include "converter.h"
-#include "roman_numerals.h"
 
 char * digitToUpper(const int digit) {
 	const int copyLength = 1;
@@ -74,14 +68,13 @@ int appendCharAndDecrement(char *resultString, const int value, const RomanNumer
 	return resultantValue;
 }
 
-char * convertToNumeral(const int value) {
-	char *result = calloc(1, sizeof(char));
+void convertToNumeral(char *romanResult, const int arabicValue) {
 	int suspectIndex = 0;
-	int valueRemaining = value;
+	int valueRemaining = arabicValue;
 	int previousValue = valueRemaining;
 	
 	while(valueRemaining > 0) {
-		valueRemaining = appendCharAndDecrement(result, valueRemaining, romanNumeralValues[suspectIndex]);
+		valueRemaining = appendCharAndDecrement(romanResult, valueRemaining, romanNumeralValues[suspectIndex]);
 		if (valueRemaining != previousValue) {
 			previousValue = valueRemaining;
 			suspectIndex = 0;
@@ -90,9 +83,7 @@ char * convertToNumeral(const int value) {
 		}
 	}
 	
-	size_t resultSize = strlen(result);
-	result = realloc(result, resultSize + 1);
-	result[resultSize] = '\0';
-	
-	return result;
+	size_t resultSize = strlen(romanResult);
+	romanResult = realloc(romanResult, resultSize + 1);
+	romanResult[resultSize] = '\0';
 }
