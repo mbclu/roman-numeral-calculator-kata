@@ -4,5 +4,6 @@
 Suite *make_master_suite (void);
 Suite *make_converter_suite (void);
 Suite *make_calculator_suite (void);
+Suite *make_rn_result_suite (void);
 
 #endif //CHECK_SUITES_H_
