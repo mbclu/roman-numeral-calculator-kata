@@ -17,6 +17,14 @@ void teardown_rn_result_tests() {
 	free(result);
 }
 
+START_TEST (initRNResult_sets_value_to_empty_string)
+{
+	initRNResult(result);
+	
+	ck_assert_str_eq("", result->value);
+}
+END_TEST
+
 START_TEST (initRNResult_sets_error_to_0)
 {
 	initRNResult(result);
@@ -45,6 +53,7 @@ Suite * make_rn_result_suite(void) {
 
     tc_rn_result = tcase_create("Convenience functions");
     tcase_add_checked_fixture(tc_rn_result, setup_rn_result_tests, teardown_rn_result_tests);
+	tcase_add_test(tc_rn_result, initRNResult_sets_value_to_empty_string);
 	tcase_add_test(tc_rn_result, initRNResult_sets_error_to_0);
     tcase_add_test(tc_rn_result, clearRNResult_sets_error_to_NULL);
     

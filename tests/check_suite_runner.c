@@ -17,7 +17,7 @@ int main() {
 
     sr = srunner_create(make_master_suite());
     srunner_add_suite (sr, make_converter_suite());
-    //srunner_add_suite (sr, make_calculator_suite());
+    srunner_add_suite (sr, make_calculator_suite());
     srunner_add_suite (sr, make_rn_result_suite());
 
     srunner_run_all(sr, CK_FORK);

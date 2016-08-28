@@ -1,10 +1,14 @@
 #include "calculator.h"
 
-void add(char *sum, const char *augend, const char *addend) {
-	
-	convertToNumeral(sum, convertToInt(augend) + convertToInt(addend));
+void add(RNResult *sum, const char *augend, const char *addend) {
+	int arabicSum = convertToInt(augend) + convertToInt(addend);
+	if (arabicSum > MAX_ROMAN_VALUE) {
+		sum->error = romanNumeralErrors[ERROR_GREATER_THAN_MAX];
+		return;
+	}
+	convertToNumeral(sum, arabicSum);
 }
 
-void subtract(char *difference, const char *minuend, const char *subtrahend) {
+void subtract(RNResult *difference, const char *minuend, const char *subtrahend) {
 	convertToNumeral(difference, convertToInt(minuend) - convertToInt(subtrahend));
 }

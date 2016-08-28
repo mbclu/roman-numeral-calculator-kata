@@ -1,14 +1,19 @@
 #ifndef RN_ERROR_H_
 #define RN_ERROR_H_
 
+typedef enum {
+	ERROR_NONE = 0, 
+	ERROR_GREATER_THAN_MAX
+} rn_error_t;
+
 typedef struct roman_numeral_error_t {
-	int number;
+	rn_error_t number;
 	char *text;
 } RNError;
 
 static RNError *romanNumeralErrors[] = {
-	&(struct roman_numeral_error_t) { 0, "No Error" },
-	&(struct roman_numeral_error_t) { 1, "Result is greater than max Roman Numeral value of MMMCMXCIX (3999)"}
+	&(struct roman_numeral_error_t) { ERROR_NONE, "No Error" },
+	&(struct roman_numeral_error_t) { ERROR_GREATER_THAN_MAX, "Result is greater than max Roman Numeral value of MMMCMXCIX (3999)"}
 };
 
 #endif //RN_ERROR_H_
