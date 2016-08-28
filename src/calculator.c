@@ -11,5 +11,11 @@ void add(RNResult *sum, const char *augend, const char *addend) {
 }
 
 void subtract(RNResult *difference, const char *minuend, const char *subtrahend) {
+	int arabicSum = convertToInt(minuend) - convertToInt(subtrahend);
+	if (arabicSum < MIN_ROMAN_VALUE) {
+		clearRNResult(difference);
+		difference->error = romanNumeralErrors[ERROR_LESS_THAN_MIN];
+		return;
+	}
 	convertToNumeral(difference, convertToInt(minuend) - convertToInt(subtrahend));
 }
