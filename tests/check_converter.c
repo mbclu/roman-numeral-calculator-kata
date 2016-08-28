@@ -7,13 +7,15 @@
 
 #include "../src/converter.h"
 
-char * result;
+RNResult * result;
 
 void setup_converter_tests() {
-	result = calloc(MAX_ROMAN_NUMERAL_STRING_LENGTH, sizeof(char));
+	result = malloc(sizeof *result);
+	initRNResult(result);
 }
 
 void teardown_converter_tests() {
+	clearRNResult(result);
 	free(result);
 }
 
@@ -80,70 +82,70 @@ END_TEST
 START_TEST (one_is_represented_by_the_letter_I)
 {
 	convertToNumeral(result, 1);
-	ck_assert_str_eq("I", result);
+	ck_assert_str_eq("I", result->value);
 }
 END_TEST
 
 START_TEST (five_is_represented_by_the_letter_V)
 {
 	convertToNumeral(result, 5);
-	ck_assert_str_eq("V", result);
+	ck_assert_str_eq("V", result->value);
 }
 END_TEST
 
 START_TEST (four_is_represented_by_the_sequence_IV)
 {
 	convertToNumeral(result, 4);
-	ck_assert_str_eq("IV", result);
+	ck_assert_str_eq("IV", result->value);
 }
 END_TEST
 
 START_TEST (two_is_represented_by_the_sequence_II)
 {
 	convertToNumeral(result, 2);
-	ck_assert_str_eq("II", result);
+	ck_assert_str_eq("II", result->value);
 }
 END_TEST
 
 START_TEST (nine_is_represented_by_the_sequence_IX)
 {
 	convertToNumeral(result, 9);
-	ck_assert_str_eq("IX", result);
+	ck_assert_str_eq("IX", result->value);
 }
 END_TEST
 
 START_TEST (forty_is_represented_by_the_sequence_XL)
 {
 	convertToNumeral(result, 40);
-	ck_assert_str_eq("XL", result);
+	ck_assert_str_eq("XL", result->value);
 }
 END_TEST
 
 START_TEST (ninety_is_represented_by_the_sequence_XC)
 {
 	convertToNumeral(result, 90);
-	ck_assert_str_eq("XC", result);
+	ck_assert_str_eq("XC", result->value);
 }
 END_TEST
 
 START_TEST (four_hundred_is_represented_by_the_sequence_CD)
 {
 	convertToNumeral(result, 400);
-	ck_assert_str_eq("CD", result);
+	ck_assert_str_eq("CD", result->value);
 }
 END_TEST
 
 START_TEST (nine_hundred_is_represented_by_the_sequence_CM)
 {
 	convertToNumeral(result, 900);
-	ck_assert_str_eq("CM", result);
+	ck_assert_str_eq("CM", result->value);
 }
 END_TEST
 
 START_TEST (three_thousand_four_hundred_fifty_six_is_represented_by_the_sequence_mmmcdlvi)
 {
 	convertToNumeral(result, 3456);
-	ck_assert_str_eq("MMMCDLVI", result);
+	ck_assert_str_eq("MMMCDLVI", result->value);
 }
 END_TEST
 
@@ -165,6 +167,7 @@ START_TEST (calling_convert_to_int_with_invalid_character_results_in_signal_rais
 	ck_assert_uint_eq(0, convertToInt("F"));
 }
 END_TEST
+
 Suite * make_converter_suite(void) {
 	Suite *s;
 	TCase *tc_convert_to_int;

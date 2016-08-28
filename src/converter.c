@@ -2,7 +2,7 @@
 
 static void copyDigitToUpperCaseString(char *toUpperResult, const int digit);
 static const int lookUpDigitValue(const char digit);
-static const int appendCharAndDecrement(char *resultString, const int value, const RomanNumeralValues toAppend);
+static const int appendCharAndDecrement(char *resultString, const int value, const RNValues toAppend);
 
 const int convertToInt(const char *romanNumeral) {
 	int result = 0;
@@ -32,13 +32,16 @@ const int convertToInt(const char *romanNumeral) {
 	return result;
 }
 
-void convertToNumeral(char *romanResult, const int arabicValue) {
+void convertToNumeral(RNResult *romanResult, const int arabicValue) {
 	int suspectIndex = 0;
 	int valueRemaining = arabicValue;
 	int previousValue = valueRemaining;
 	
+	//removes warning for now
+	romanResult->error = romanNumeralErrors[0];
+	
 	while(valueRemaining > 0) {
-		valueRemaining = appendCharAndDecrement(romanResult, valueRemaining, romanNumeralValues[suspectIndex]);
+		valueRemaining = appendCharAndDecrement(romanResult->value, valueRemaining, romanNumeralValues[suspectIndex]);
 		if (valueRemaining != previousValue) {
 			previousValue = valueRemaining;
 			suspectIndex = 0;
@@ -47,9 +50,9 @@ void convertToNumeral(char *romanResult, const int arabicValue) {
 		}
 	}
 	
-	size_t resultSize = strlen(romanResult);
-	romanResult = realloc(romanResult, resultSize + 1);
-	romanResult[resultSize] = '\0';
+	size_t resultSize = strlen(romanResult->value);
+	romanResult->value = realloc(romanResult->value, resultSize + 1);
+	romanResult->value[resultSize] = '\0';
 }
 
 static const int lookUpDigitValue(const char digit) {
@@ -78,7 +81,7 @@ static void copyDigitToUpperCaseString(char *toUpperResult, const int digit) {
 	memcpy(toUpperResult, &upperCaseDigit, 1);
 }
 
-static const int appendCharAndDecrement(char *resultString, const int value, const RomanNumeralValues toAppend) {
+static const int appendCharAndDecrement(char *resultString, const int value, const RNValues toAppend) {
 	int resultantValue = value;
 	
 	if (resultantValue - toAppend.value >= 0) {

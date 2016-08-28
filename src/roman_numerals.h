@@ -6,9 +6,9 @@ static const int NUM_ROMAN_LOOKUP_VALUES = 13;
 typedef struct roman_numeral_values_t {
 	int value;
 	char *numeral;
-} RomanNumeralValues;
+} RNValues;
 
-static const RomanNumeralValues romanNumeralValues[] = {
+static const RNValues romanNumeralValues[] = {
 	{ 1000, "M"  },
 	{ 900,  "CM" },
 	{ 500,  "D"  },
