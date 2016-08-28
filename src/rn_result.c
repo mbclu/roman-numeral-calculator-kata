@@ -7,5 +7,6 @@ void initRNResult(RNResult *result) {
 
 void clearRNResult(RNResult *result) {
 	free(result->value);
+	result->value = NULL;
 	result->error = NULL;
 }

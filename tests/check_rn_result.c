@@ -36,6 +36,15 @@ START_TEST (initRNResult_sets_error_to_0)
 }
 END_TEST
 
+START_TEST (clearRNResult_sets_value_to_NULL)
+{
+	initRNResult(result);
+	clearRNResult(result);
+	
+	ck_assert_ptr_eq(NULL, result->value);
+}
+END_TEST
+
 START_TEST (clearRNResult_sets_error_to_NULL)
 {
 	initRNResult(result);
@@ -55,6 +64,7 @@ Suite * make_rn_result_suite(void) {
     tcase_add_checked_fixture(tc_rn_result, setup_rn_result_tests, teardown_rn_result_tests);
 	tcase_add_test(tc_rn_result, initRNResult_sets_value_to_empty_string);
 	tcase_add_test(tc_rn_result, initRNResult_sets_error_to_0);
+    tcase_add_test(tc_rn_result, clearRNResult_sets_value_to_NULL);
     tcase_add_test(tc_rn_result, clearRNResult_sets_error_to_NULL);
     
     suite_add_tcase(s, tc_rn_result);

@@ -67,11 +67,18 @@ START_TEST (MMMCMXCIX_minus_MCXI_is_MMDCCCLXXXVIII)
 }
 END_TEST
 
-START_TEST (addition_with_a_result_greater_than_3999_results_in_error_return)
+START_TEST (addition_with_a_result_greater_than_3999_results_in_error)
 {
 	add(result, "MMMCMXCIX", "I");
 	ck_assert_int_eq(ERROR_GREATER_THAN_MAX, result->error->number);
 	ck_assert_str_eq("Result is greater than max Roman Numeral value of MMMCMXCIX (3999)" , result->error->text);
+}
+END_TEST
+
+START_TEST (addition_with_a_result_greater_than_3999_results_null_result_value)
+{
+	add(result, "MMMCMXCIX", "I");
+	ck_assert_ptr_eq(NULL, result->value);
 }
 END_TEST
 
@@ -98,7 +105,8 @@ Suite * make_calculator_suite(void) {
     
     tc_validation = tcase_create("Validate Results");
     tcase_add_checked_fixture(tc_validation, setup_calculator_tests, teardown_calculator_tests);
-	tcase_add_test(tc_validation, addition_with_a_result_greater_than_3999_results_in_error_return);
+	tcase_add_test(tc_validation, addition_with_a_result_greater_than_3999_results_in_error);
+	tcase_add_test(tc_validation, addition_with_a_result_greater_than_3999_results_null_result_value);
     
     suite_add_tcase(s, tc_addition);
     suite_add_tcase(s, tc_subtraction);
