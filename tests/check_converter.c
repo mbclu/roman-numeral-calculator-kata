@@ -202,10 +202,11 @@ Suite * make_converter_suite(void) {
     tcase_add_test(tc_convert_to_numeral, three_thousand_four_hundred_fifty_six_is_represented_by_the_sequence_mmmcdlvi);
     
     tc_convert_validations = tcase_create("Convert Validations");
+    tcase_add_checked_fixture(tc_convert_validations, setup_converter_tests, teardown_converter_tests);
     tcase_add_test_raise_signal(tc_convert_validations, calling_convert_to_int_with_invalid_character_results_in_signal_raised, SIGINT);
-    
+
     suite_add_tcase(s, tc_convert_to_int);
-    suite_add_tcase(s, tc_convert_to_numeral);
+    suite_add_tcase(s, tc_convert_to_numeral);    
     suite_add_tcase(s, tc_convert_validations);
 
     return s;

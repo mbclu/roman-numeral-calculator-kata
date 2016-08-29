@@ -11,9 +11,11 @@ RNResult *result;
 
 void setup_rn_result_tests() {
 	result = malloc(sizeof *result);
+	initRNResult(result);
 }
 
 void teardown_rn_result_tests() {
+	clearRNResult(result);
 	free(result);
 }
 
@@ -31,14 +33,11 @@ START_TEST (initRNResult_sets_error_to_0)
 	
 	ck_assert_uint_eq(0, result->error->number);
 	ck_assert_str_eq("No Error", result->error->text);
-	
-	clearRNResult(result);
 }
 END_TEST
 
 START_TEST (clearRNResult_sets_value_to_NULL)
 {
-	initRNResult(result);
 	clearRNResult(result);
 	
 	ck_assert_ptr_eq(NULL, result->value);
@@ -47,10 +46,18 @@ END_TEST
 
 START_TEST (clearRNResult_sets_error_to_NULL)
 {
-	initRNResult(result);
 	clearRNResult(result);
 	
 	ck_assert_ptr_eq(NULL, result->error);
+}
+END_TEST
+
+START_TEST (setError_sets_error_to_provided_value)
+{
+	setError(result, ERROR_LESS_THAN_MIN);
+	
+	ck_assert_uint_eq(romanNumeralErrors[ERROR_LESS_THAN_MIN]->number, result->error->number);
+	ck_assert_str_eq(romanNumeralErrors[ERROR_LESS_THAN_MIN]->text, result->error->text);
 }
 END_TEST
 
@@ -66,6 +73,7 @@ Suite * make_rn_result_suite(void) {
 	tcase_add_test(tc_rn_result, initRNResult_sets_error_to_0);
     tcase_add_test(tc_rn_result, clearRNResult_sets_value_to_NULL);
     tcase_add_test(tc_rn_result, clearRNResult_sets_error_to_NULL);
+    tcase_add_test(tc_rn_result, setError_sets_error_to_provided_value);
     
     suite_add_tcase(s, tc_rn_result);
 

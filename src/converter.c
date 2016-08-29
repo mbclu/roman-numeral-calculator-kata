@@ -37,9 +37,6 @@ void convertToNumeral(RNResult *romanResult, const int arabicValue) {
 	int valueRemaining = arabicValue;
 	int previousValue = valueRemaining;
 	
-	//removes warning for now
-	romanResult->error = romanNumeralErrors[0];
-	
 	while(valueRemaining > 0) {
 		valueRemaining = appendCharAndDecrement(romanResult->value, valueRemaining, romanNumeralValues[suspectIndex]);
 		if (valueRemaining != previousValue) {
