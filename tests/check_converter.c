@@ -32,31 +32,37 @@ START_TEST (invalid_data_such_as_f_results_in_error)
 	ck_assert_str_eq("Invalid input received", result->error->text);
 }
 END_TEST
-/*
+
 START_TEST (ii_represents_two)
 {
-	ck_assert_uint_eq(2, convertToInt("ii"));
+	ck_assert_uint_eq(2, convertToInt("ii", result->error));
+}
+END_TEST
+
+START_TEST (invalid_data_anywhere_in_the_input_results_in_error)
+{
+	ck_assert_uint_eq(0, convertToInt("if", result->error));
+	ck_assert_uint_eq(ERROR_INVALID_INPUT, result->error->number);
+	ck_assert_str_eq("Invalid input received", result->error->text);
 }
 END_TEST
 
 START_TEST (v_represents_five)
 {
-	ck_assert_uint_eq(5, convertToInt("v"));
+	ck_assert_uint_eq(5, convertToInt("v", result->error));
 }
 END_TEST
 
 START_TEST (single_letters_by_themseleves_represent_core_values)
 {
-	ck_assert_uint_eq(1, convertToInt("i"));
-	ck_assert_uint_eq(5, convertToInt("v"));
-	ck_assert_uint_eq(10, convertToInt("x"));
-	ck_assert_uint_eq(50, convertToInt("l"));
-	ck_assert_uint_eq(100, convertToInt("c"));
-	ck_assert_uint_eq(500, convertToInt("d"));
-	ck_assert_uint_eq(1000, convertToInt("m"));
+	ck_assert_uint_eq(10, convertToInt("x", result->error));
+	ck_assert_uint_eq(50, convertToInt("l", result->error));
+	ck_assert_uint_eq(100, convertToInt("c", result->error));
+	ck_assert_uint_eq(500, convertToInt("d", result->error));
+	ck_assert_uint_eq(1000, convertToInt("m", result->error));
 }
 END_TEST
-
+/*
 START_TEST (iv_represents_four)
 {
 	ck_assert_uint_eq(4, convertToInt("iv"));
@@ -181,9 +187,9 @@ Suite * make_converter_suite(void) {
     tc_convert_to_int = tcase_create("Convert To Integer");
 	tcase_add_checked_fixture(tc_convert_to_int, setup_converter_tests, teardown_converter_tests);
 	tcase_add_test(tc_convert_to_int, i_represents_one);
-    /*tcase_add_test(tc_convert_to_int, ii_represents_two);
     tcase_add_test(tc_convert_to_int, v_represents_five);
     tcase_add_test(tc_convert_to_int, single_letters_by_themseleves_represent_core_values);
+/*    tcase_add_test(tc_convert_to_int, ii_represents_two);
     tcase_add_test(tc_convert_to_int, iv_represents_four);
     tcase_add_test(tc_convert_to_int, xix_represents_nineteen);
     tcase_add_test(tc_convert_to_int, mmmcdlvi_represents_three_thousand_four_hundred_fifty_six);
@@ -208,6 +214,7 @@ Suite * make_converter_suite(void) {
     tc_convert_validations = tcase_create("Convert Validations");
     tcase_add_checked_fixture(tc_convert_validations, setup_converter_tests, teardown_converter_tests);
     tcase_add_test(tc_convert_validations, invalid_data_such_as_f_results_in_error);
+    tcase_add_test(tc_convert_validations, invalid_data_anywhere_in_the_input_results_in_error);
 
     suite_add_tcase(s, tc_convert_to_int);
     suite_add_tcase(s, tc_convert_to_numeral);    
