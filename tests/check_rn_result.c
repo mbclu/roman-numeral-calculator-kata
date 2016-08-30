@@ -54,7 +54,7 @@ END_TEST
 
 START_TEST (setError_sets_error_to_provided_value)
 {
-	setError(result, ERROR_LESS_THAN_MIN);
+	setError(result->error, ERROR_LESS_THAN_MIN);
 	
 	ck_assert_uint_eq(romanNumeralErrors[ERROR_LESS_THAN_MIN]->number, result->error->number);
 	ck_assert_str_eq(romanNumeralErrors[ERROR_LESS_THAN_MIN]->text, result->error->text);

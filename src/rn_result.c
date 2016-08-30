@@ -1,7 +1,10 @@
+#include <string.h>
+
 #include "rn_result.h"
 
 void initRNResult(RNResult *result) {
-	setError(result, ERROR_NONE);
+	result->error = malloc(sizeof result->error);
+	setError(result->error, ERROR_NONE);
 	result->value = calloc(MAX_ROMAN_NUMERAL_STRING_LENGTH, sizeof(char));
 }
 
@@ -11,6 +14,6 @@ void clearRNResult(RNResult *result) {
 	result->error = NULL;
 }
 
-void setError(RNResult *result, const rn_error_t errorType) {
-	result->error = romanNumeralErrors[errorType];
+void setError(RNError *error, const rn_error_t errorType) {
+	memcpy(error, romanNumeralErrors[errorType], sizeof *error);
 }
