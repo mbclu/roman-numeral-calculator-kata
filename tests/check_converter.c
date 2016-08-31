@@ -19,9 +19,27 @@ void teardown_converter_tests() {
 	free(result);
 }
 
-START_TEST (i_represents_one)
+START_TEST (single_letters_by_themseleves_represent_core_values)
 {
 	ck_assert_uint_eq(1, convertToInt("i", result->error));
+	ck_assert_uint_eq(5, convertToInt("v", result->error));
+	ck_assert_uint_eq(10, convertToInt("x", result->error));
+	ck_assert_uint_eq(50, convertToInt("l", result->error));
+	ck_assert_uint_eq(100, convertToInt("c", result->error));
+	ck_assert_uint_eq(500, convertToInt("d", result->error));
+	ck_assert_uint_eq(1000, convertToInt("m", result->error));
+}
+END_TEST
+
+START_TEST (uppercase_letters_also_represent_things)
+{
+	ck_assert_uint_eq(1, convertToInt("I", result->error));
+	ck_assert_uint_eq(5, convertToInt("V", result->error));
+	ck_assert_uint_eq(10, convertToInt("X", result->error));
+	ck_assert_uint_eq(50, convertToInt("L", result->error));
+	ck_assert_uint_eq(100, convertToInt("C", result->error));
+	ck_assert_uint_eq(500, convertToInt("D", result->error));
+	ck_assert_uint_eq(1000, convertToInt("M", result->error));
 }
 END_TEST
 
@@ -47,65 +65,37 @@ START_TEST (invalid_data_anywhere_in_the_input_results_in_error)
 }
 END_TEST
 
-START_TEST (v_represents_five)
-{
-	ck_assert_uint_eq(5, convertToInt("v", result->error));
-}
-END_TEST
-
-START_TEST (single_letters_by_themseleves_represent_core_values)
-{
-	ck_assert_uint_eq(10, convertToInt("x", result->error));
-	ck_assert_uint_eq(50, convertToInt("l", result->error));
-	ck_assert_uint_eq(100, convertToInt("c", result->error));
-	ck_assert_uint_eq(500, convertToInt("d", result->error));
-	ck_assert_uint_eq(1000, convertToInt("m", result->error));
-}
-END_TEST
-/*
 START_TEST (iv_represents_four)
 {
-	ck_assert_uint_eq(4, convertToInt("iv"));
+	ck_assert_uint_eq(4, convertToInt("iv", result->error));
 }
 END_TEST
 
 START_TEST (xix_represents_nineteen)
 {
-	ck_assert_uint_eq(19, convertToInt("xix"));
+	ck_assert_uint_eq(19, convertToInt("xix", result->error));
 }
 END_TEST
 
 START_TEST (mmmcdlvi_represents_three_thousand_four_hundred_fifty_six)
 {
-	ck_assert_uint_eq(3456, convertToInt("mmmcdlvi"));
+	ck_assert_uint_eq(3456, convertToInt("mmmcdlvi", result->error));
 }
 END_TEST
 
-START_TEST (uppercase_letters_also_represent_things)
+START_TEST (mcxi_represents_one_one_one_one)
 {
-	ck_assert_uint_eq(1, convertToInt("I"));
-	ck_assert_uint_eq(5, convertToInt("V"));
-	ck_assert_uint_eq(10, convertToInt("X"));
-	ck_assert_uint_eq(50, convertToInt("L"));
-	ck_assert_uint_eq(100, convertToInt("C"));
-	ck_assert_uint_eq(500, convertToInt("D"));
-	ck_assert_uint_eq(1000, convertToInt("M"));
-}
-END_TEST
-* 
-* START_TEST (mcxi_represents_one_one_one_one)
-{
-	ck_assert_uint_eq(1111, convertToInt("mcxi"));
+	ck_assert_uint_eq(1111, convertToInt("mcxi", result->error));
 }
 END_TEST
 
 START_TEST (convertToInt_works_twice_in_a_row)
 {
-	ck_assert_uint_eq(1111, convertToInt("mcxi"));
-	ck_assert_uint_eq(1111, convertToInt("mcxi"));
+	ck_assert_uint_eq(1111, convertToInt("mcxi", result->error));
+	ck_assert_uint_eq(1111, convertToInt("mcxi", result->error));
 }
 END_TEST
-*/
+
 START_TEST (one_is_represented_by_the_letter_I)
 {
 	convertToNumeral(result, 1);
@@ -186,17 +176,14 @@ Suite * make_converter_suite(void) {
 
     tc_convert_to_int = tcase_create("Convert To Integer");
 	tcase_add_checked_fixture(tc_convert_to_int, setup_converter_tests, teardown_converter_tests);
-	tcase_add_test(tc_convert_to_int, i_represents_one);
-    tcase_add_test(tc_convert_to_int, v_represents_five);
     tcase_add_test(tc_convert_to_int, single_letters_by_themseleves_represent_core_values);
-/*    tcase_add_test(tc_convert_to_int, ii_represents_two);
+    tcase_add_test(tc_convert_to_int, uppercase_letters_also_represent_things);
+    tcase_add_test(tc_convert_to_int, ii_represents_two);
     tcase_add_test(tc_convert_to_int, iv_represents_four);
     tcase_add_test(tc_convert_to_int, xix_represents_nineteen);
     tcase_add_test(tc_convert_to_int, mmmcdlvi_represents_three_thousand_four_hundred_fifty_six);
-    tcase_add_test(tc_convert_to_int, uppercase_letters_also_represent_things);
     tcase_add_test(tc_convert_to_int, mcxi_represents_one_one_one_one);
     tcase_add_test(tc_convert_to_int, convertToInt_works_twice_in_a_row);
-    */
     
     tc_convert_to_numeral = tcase_create("Convert To Numeral");
     tcase_add_checked_fixture(tc_convert_to_numeral, setup_converter_tests, teardown_converter_tests);
