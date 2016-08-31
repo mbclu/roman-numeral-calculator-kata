@@ -96,6 +96,22 @@ START_TEST (convertToInt_works_twice_in_a_row)
 }
 END_TEST
 
+START_TEST (input_with_more_than_one_greater_numerals_results_in_error)
+{
+	ck_assert_uint_eq(0, convertToInt("DD", result->error));
+	ck_assert_uint_eq(ERROR_INVALID_INPUT, result->error->number);
+	ck_assert_str_eq("Invalid input received", result->error->text);
+}
+END_TEST
+
+START_TEST (input_with_more_than_three_lesser_numerals_results_in_error)
+{
+	ck_assert_uint_eq(0, convertToInt("IIII", result->error));
+	ck_assert_uint_eq(ERROR_INVALID_INPUT, result->error->number);
+	ck_assert_str_eq("Invalid input received", result->error->text);
+}
+END_TEST
+
 START_TEST (one_is_represented_by_the_letter_I)
 {
 	convertToNumeral(result, 1);
@@ -184,7 +200,14 @@ Suite * make_converter_suite(void) {
     tcase_add_test(tc_convert_to_int, mmmcdlvi_represents_three_thousand_four_hundred_fifty_six);
     tcase_add_test(tc_convert_to_int, mcxi_represents_one_one_one_one);
     tcase_add_test(tc_convert_to_int, convertToInt_works_twice_in_a_row);
-    
+      
+    tc_convert_validations = tcase_create("Convert Validations");
+    tcase_add_checked_fixture(tc_convert_validations, setup_converter_tests, teardown_converter_tests);
+    tcase_add_test(tc_convert_validations, invalid_data_such_as_f_results_in_error);
+    tcase_add_test(tc_convert_validations, invalid_data_anywhere_in_the_input_results_in_error);
+    tcase_add_test(tc_convert_validations, input_with_more_than_one_greater_numerals_results_in_error);
+    //tcase_add_test(tc_convert_validations, input_with_more_than_three_lesser_numerals_results_in_error);
+      
     tc_convert_to_numeral = tcase_create("Convert To Numeral");
     tcase_add_checked_fixture(tc_convert_to_numeral, setup_converter_tests, teardown_converter_tests);
     tcase_add_test(tc_convert_to_numeral, one_is_represented_by_the_letter_I);
@@ -197,11 +220,6 @@ Suite * make_converter_suite(void) {
     tcase_add_test(tc_convert_to_numeral, four_hundred_is_represented_by_the_sequence_CD);
     tcase_add_test(tc_convert_to_numeral, nine_hundred_is_represented_by_the_sequence_CM);
     tcase_add_test(tc_convert_to_numeral, three_thousand_four_hundred_fifty_six_is_represented_by_the_sequence_mmmcdlvi);
-    
-    tc_convert_validations = tcase_create("Convert Validations");
-    tcase_add_checked_fixture(tc_convert_validations, setup_converter_tests, teardown_converter_tests);
-    tcase_add_test(tc_convert_validations, invalid_data_such_as_f_results_in_error);
-    tcase_add_test(tc_convert_validations, invalid_data_anywhere_in_the_input_results_in_error);
 
     suite_add_tcase(s, tc_convert_to_int);
     suite_add_tcase(s, tc_convert_to_numeral);    

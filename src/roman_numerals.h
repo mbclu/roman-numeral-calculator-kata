@@ -4,6 +4,8 @@
 static const int NUM_ROMAN_LOOKUP_VALUES = 13;
 static const int MAX_ROMAN_VALUE = 3999;
 static const int MIN_ROMAN_VALUE = 1;
+static const int GREATER_NUMERAL_REPEAT_LIMIT = 1;
+static const int LESSER_NUMERAL_REPEAT_LIMIT = 3;
 
 typedef struct roman_numeral_values_t {
 	int value;
