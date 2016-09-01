@@ -10,9 +10,10 @@ static const int LESSER_NUMERAL_REPEAT_LIMIT = 3;
 typedef struct roman_numeral_values_t {
 	int value;
 	char *numeral;
-} RNValues;
+	char *validNext
+} RNValue;
 
-static const RNValues romanNumeralValues[] = {
+static const RNValue romanNumeralValues[] = {
 	{ 1000, "M"  },
 	{ 900,  "CM" },
 	{ 500,  "D"  },

@@ -2,7 +2,8 @@
 
 static void copyDigitToUpperCaseString(char *toUpperResult, const int digit);
 static const int lookUpDigitValue(const char romanDigit);
-static const int appendCharAndDecrement(char *resultString, const int value, const RNValues toAppend);
+static const int appendCharAndDecrement(char *resultString, const int value, const RNValue toAppend);
+static const int isGreaterDigit(const char romanDigit);
 
 const int convertToInt(const char *romanInput, RNError *error) {
 	int result = 0;
@@ -26,7 +27,10 @@ const int convertToInt(const char *romanInput, RNError *error) {
 			prevDigitValue = lookUpDigitValue(prevDigit);
 		}
 		
-		if (currentDigitValue < prevDigitValue) {
+		if (currentDigit == prevDigit && isGreaterDigit(currentDigit)) {
+			setError(error, ERROR_BAD_SEQUENCE);
+			return 0;
+		} else if (currentDigitValue < prevDigitValue) {
 			result -= currentDigitValue;
 		} else {
 			result += currentDigitValue;
@@ -78,7 +82,7 @@ static void copyDigitToUpperCaseString(char *toUpperResult, const int digit) {
 	memcpy(toUpperResult, &upperCaseDigit, 1);
 }
 
-static const int appendCharAndDecrement(char *resultString, const int value, const RNValues toAppend) {
+static const int appendCharAndDecrement(char *resultString, const int value, const RNValue toAppend) {
 	int resultantValue = value;
 	
 	if (resultantValue - toAppend.value >= 0) {
@@ -89,3 +93,16 @@ static const int appendCharAndDecrement(char *resultString, const int value, con
 	
 	return resultantValue;
 }
+
+static const int isGreaterDigit(const char romanDigit) {
+	char upperCaseString;
+	copyDigitToUpperCaseString(&upperCaseString, romanDigit);
+	switch (upperCaseString) {
+		case 'V':
+		case 'L': 
+		case 'D':
+			return 1;
+	}
+	return 0;
+}
+

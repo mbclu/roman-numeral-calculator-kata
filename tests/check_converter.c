@@ -99,16 +99,16 @@ END_TEST
 START_TEST (input_with_more_than_one_greater_numerals_results_in_error)
 {
 	ck_assert_uint_eq(0, convertToInt("DD", result->error));
-	ck_assert_uint_eq(ERROR_INVALID_INPUT, result->error->number);
-	ck_assert_str_eq("Invalid input received", result->error->text);
+	ck_assert_uint_eq(ERROR_BAD_SEQUENCE, result->error->number);
+	ck_assert_str_eq("Out of sequence input received", result->error->text);
 }
 END_TEST
 
 START_TEST (input_with_more_than_three_lesser_numerals_results_in_error)
 {
 	ck_assert_uint_eq(0, convertToInt("IIII", result->error));
-	ck_assert_uint_eq(ERROR_INVALID_INPUT, result->error->number);
-	ck_assert_str_eq("Invalid input received", result->error->text);
+	ck_assert_uint_eq(ERROR_BAD_SEQUENCE, result->error->number);
+	ck_assert_str_eq("Out of sequence input received", result->error->text);
 }
 END_TEST
 
