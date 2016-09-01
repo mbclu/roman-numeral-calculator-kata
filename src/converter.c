@@ -9,6 +9,7 @@ const int convertToInt(const char *romanInput, RNError *error) {
 	int result = 0;
 	char currentDigit = '\0';
 	char prevDigit = '\0';
+	int repeatDigitCount = 0;
 	
 	int i;
 	size_t length = strlen(romanInput);
@@ -27,12 +28,21 @@ const int convertToInt(const char *romanInput, RNError *error) {
 			prevDigitValue = lookUpDigitValue(prevDigit);
 		}
 		
-		if (currentDigit == prevDigit && isGreaterDigit(currentDigit)) {
-			setError(error, ERROR_BAD_SEQUENCE);
-			return 0;
-		} else if (currentDigitValue < prevDigitValue) {
+		if (currentDigitValue < prevDigitValue) {
 			result -= currentDigitValue;
 		} else {
+			if (currentDigit == prevDigit) {
+				repeatDigitCount++;
+				if (repeatDigitCount > 0 && isGreaterDigit(currentDigit)) {
+					setError(error, ERROR_BAD_SEQUENCE);
+					return 0;
+				} else if (repeatDigitCount > 2 && !isGreaterDigit(currentDigit)) {
+					setError(error, ERROR_BAD_SEQUENCE);
+					return 0;
+				}
+			} else {
+				repeatDigitCount = 0;
+			}
 			result += currentDigitValue;
 		}
 	}

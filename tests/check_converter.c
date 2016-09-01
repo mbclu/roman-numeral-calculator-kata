@@ -206,7 +206,7 @@ Suite * make_converter_suite(void) {
     tcase_add_test(tc_convert_validations, invalid_data_such_as_f_results_in_error);
     tcase_add_test(tc_convert_validations, invalid_data_anywhere_in_the_input_results_in_error);
     tcase_add_test(tc_convert_validations, input_with_more_than_one_greater_numerals_results_in_error);
-    //tcase_add_test(tc_convert_validations, input_with_more_than_three_lesser_numerals_results_in_error);
+    tcase_add_test(tc_convert_validations, input_with_more_than_three_lesser_numerals_results_in_error);
       
     tc_convert_to_numeral = tcase_create("Convert To Numeral");
     tcase_add_checked_fixture(tc_convert_to_numeral, setup_converter_tests, teardown_converter_tests);
