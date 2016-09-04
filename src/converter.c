@@ -7,43 +7,43 @@ static const int isGreaterDigit(const char romanDigit);
 
 const int convertToInt(const char *romanInput, RNError *error) {
 	int result = 0;
-	char currentDigit = '\0';
-	char prevDigit = '\0';
+	char rightDigit = '\0';
+	char leftDigit = '\0';
 	int repeatDigitCount = 0;
 	
 	int i;
 	size_t length = strlen(romanInput);
 	
 	for (i = length - 1; i >= 0; --i) {
-		currentDigit = romanInput[i];
-		int currentDigitValue = lookUpDigitValue(currentDigit);
-		if (0 == currentDigitValue) {
+		rightDigit = romanInput[i];
+		int rightDigitValue = lookUpDigitValue(rightDigit);
+		if (0 == rightDigitValue) {
 			setError(error, ERROR_INVALID_INPUT);
 			return 0;
 		}
 		
-		int prevDigitValue = 0;
+		int leftDigitValue = 0;
 		if (i < length - 1) {
-			prevDigit = romanInput[i + 1];
-			prevDigitValue = lookUpDigitValue(prevDigit);
+			leftDigit = romanInput[i + 1];
+			leftDigitValue = lookUpDigitValue(leftDigit);
 		}
 		
-		if (currentDigitValue < prevDigitValue) {
-			result -= currentDigitValue;
+		if (rightDigitValue < leftDigitValue) {
+			result -= rightDigitValue;
 		} else {
-			if (currentDigit == prevDigit) {
+			if (rightDigit == leftDigit) {
 				repeatDigitCount++;
-				if (repeatDigitCount > 0 && isGreaterDigit(currentDigit)) {
+				if (repeatDigitCount > 0 && isGreaterDigit(rightDigit)) {
 					setError(error, ERROR_BAD_SEQUENCE);
 					return 0;
-				} else if (repeatDigitCount > 2 && !isGreaterDigit(currentDigit)) {
+				} else if (repeatDigitCount > 2 && !isGreaterDigit(rightDigit)) {
 					setError(error, ERROR_BAD_SEQUENCE);
 					return 0;
 				}
 			} else {
 				repeatDigitCount = 0;
 			}
-			result += currentDigitValue;
+			result += rightDigitValue;
 		}
 	}
 	
