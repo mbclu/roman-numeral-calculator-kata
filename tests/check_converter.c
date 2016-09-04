@@ -112,6 +112,14 @@ START_TEST (input_with_more_than_three_lesser_numerals_results_in_error)
 }
 END_TEST
 
+START_TEST (input_out_of_sequence_results_in_error)
+{
+	ck_assert_uint_eq(0, convertToInt("IM", result->error));
+	ck_assert_uint_eq(ERROR_BAD_SEQUENCE, result->error->number);
+	ck_assert_str_eq("Out of sequence input received", result->error->text);
+}
+END_TEST
+
 START_TEST (one_is_represented_by_the_letter_I)
 {
 	convertToNumeral(result, 1);
@@ -207,6 +215,7 @@ Suite * make_converter_suite(void) {
     tcase_add_test(tc_convert_validations, invalid_data_anywhere_in_the_input_results_in_error);
     tcase_add_test(tc_convert_validations, input_with_more_than_one_greater_numerals_results_in_error);
     tcase_add_test(tc_convert_validations, input_with_more_than_three_lesser_numerals_results_in_error);
+    tcase_add_test(tc_convert_validations, input_out_of_sequence_results_in_error);
       
     tc_convert_to_numeral = tcase_create("Convert To Numeral");
     tcase_add_checked_fixture(tc_convert_to_numeral, setup_converter_tests, teardown_converter_tests);

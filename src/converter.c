@@ -1,50 +1,29 @@
 #include "converter.h"
 
-static void copyDigitToUpperCaseString(char *toUpperResult, const int digit);
-static const int lookUpDigitValue(const char romanDigit);
+static void toUpper(char *toUpperResult, const char* text, const int length);
+static const int lookUpDigitValue(const char *romanDigits, const int digitCount);
 static const int appendCharAndDecrement(char *resultString, const int value, const RNValue toAppend);
-static const int isGreaterDigit(const char romanDigit);
 
 const int convertToInt(const char *romanInput, RNError *error) {
 	int result = 0;
-	char rightDigit = '\0';
-	char leftDigit = '\0';
-	int repeatDigitCount = 0;
+	int parseIndex = 0;
+	int shiftAmount = 2;
 	
-	int i;
-	size_t length = strlen(romanInput);
-	
-	for (i = length - 1; i >= 0; --i) {
-		rightDigit = romanInput[i];
-		int rightDigitValue = lookUpDigitValue(rightDigit);
-		if (0 == rightDigitValue) {
-			setError(error, ERROR_INVALID_INPUT);
-			return 0;
-		}
-		
-		int leftDigitValue = 0;
-		if (i < length - 1) {
-			leftDigit = romanInput[i + 1];
-			leftDigitValue = lookUpDigitValue(leftDigit);
-		}
-		
-		if (rightDigitValue < leftDigitValue) {
-			result -= rightDigitValue;
+	int lengthToParse;
+	for (lengthToParse = strlen(romanInput); lengthToParse > 0; lengthToParse -= shiftAmount) {
+		int digitValue = 0;
+		if (1 == lengthToParse) {
+			shiftAmount = 1;
 		} else {
-			if (rightDigit == leftDigit) {
-				repeatDigitCount++;
-				if (repeatDigitCount > 0 && isGreaterDigit(rightDigit)) {
-					setError(error, ERROR_BAD_SEQUENCE);
-					return 0;
-				} else if (repeatDigitCount > 2 && !isGreaterDigit(rightDigit)) {
-					setError(error, ERROR_BAD_SEQUENCE);
-					return 0;
-				}
-			} else {
-				repeatDigitCount = 0;
-			}
-			result += rightDigitValue;
+			shiftAmount = 2;
 		}
+		digitValue = lookUpDigitValue(romanInput + parseIndex, shiftAmount);
+		if (0 == digitValue) {
+			shiftAmount = 1;
+			digitValue = lookUpDigitValue(romanInput + parseIndex, shiftAmount);
+		}
+		parseIndex += shiftAmount;
+		result += digitValue;
 	}
 	
 	return result;
@@ -70,12 +49,12 @@ void convertToNumeral(RNResult *result, const int arabicValue) {
 	result->value[resultSize] = '\0';
 }
 
-static const int lookUpDigitValue(const char romanDigit) {
-	char upperCaseString;
+static const int lookUpDigitValue(const char *romanDigits, const int digitCount) {
+	char upperCaseString[digitCount + 1];
 	int result = 0;
 	int i;
 
-	copyDigitToUpperCaseString(&upperCaseString, romanDigit);
+	toUpper(&upperCaseString, romanDigits, digitCount);
 
 	for (i = 0; i < NUM_ROMAN_LOOKUP_VALUES; i++) {
 		if (0 == strcmp(&upperCaseString, romanNumeralValues[i].numeral)) {
@@ -87,9 +66,12 @@ static const int lookUpDigitValue(const char romanDigit) {
 	return result;
 }
 
-static void copyDigitToUpperCaseString(char *toUpperResult, const int digit) {
-	char upperCaseDigit = (char) toupper(digit);
-	memcpy(toUpperResult, &upperCaseDigit, 1);
+static void toUpper(char *toUpperResult, const char* text, const int length) {
+	int i;
+	for (i = 0; i < length; i++) {
+		toUpperResult[i] = (char) toupper(text[i]);
+	}
+	toUpperResult[length] = '\0';
 }
 
 static const int appendCharAndDecrement(char *resultString, const int value, const RNValue toAppend) {
@@ -103,16 +85,3 @@ static const int appendCharAndDecrement(char *resultString, const int value, con
 	
 	return resultantValue;
 }
-
-static const int isGreaterDigit(const char romanDigit) {
-	char upperCaseString;
-	copyDigitToUpperCaseString(&upperCaseString, romanDigit);
-	switch (upperCaseString) {
-		case 'V':
-		case 'L': 
-		case 'D':
-			return 1;
-	}
-	return 0;
-}
-
