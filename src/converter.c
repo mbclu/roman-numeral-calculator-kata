@@ -52,7 +52,7 @@ void convertToNumeral(RNResult *result, const int arabicValue) {
 	int previousValue = valueRemaining;
 	
 	while(valueRemaining > 0) {
-		valueRemaining = appendCharAndDecrement(result->value, valueRemaining, romanNumeralValues[suspectIndex]);
+		valueRemaining = appendCharAndDecrement(result->roman, valueRemaining, romanNumeralValues[suspectIndex]);
 		if (valueRemaining != previousValue) {
 			previousValue = valueRemaining;
 			suspectIndex = 0;
@@ -61,9 +61,9 @@ void convertToNumeral(RNResult *result, const int arabicValue) {
 		}
 	}
 	
-	size_t resultSize = strlen(result->value);
-	result->value = realloc(result->value, resultSize + 1);
-	result->value[resultSize] = '\0';
+	size_t resultSize = strlen(result->roman);
+	result->roman = realloc(result->roman, resultSize + 1);
+	result->roman[resultSize] = '\0';
 }
 
 static const int lookUpDigitIndex(const char *romanDigits, const int digitCount) {

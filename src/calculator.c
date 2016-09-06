@@ -1,5 +1,10 @@
 #include "calculator.h"
 
+void enterInput(RNResult *inputResult, const char *input) {
+	strcpy(inputResult->roman, input);
+	inputResult->arabic = convertToInt(input, inputResult->error);
+}
+
 void add(RNResult *sumResult, const char *augend, const char *addend) {
 	int arabicSum = 0;
 	int augendValue = convertToInt(augend, sumResult->error);

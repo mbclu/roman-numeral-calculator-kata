@@ -19,15 +19,23 @@ void teardown_rn_result_tests() {
 	free(result);
 }
 
-START_TEST (initRNResult_sets_value_to_empty_string)
+START_TEST (initRNResult_sets_roman_value_to_empty_string)
 {
 	initRNResult(result);
 	
-	ck_assert_str_eq("", result->value);
+	ck_assert_str_eq("", result->roman);
 }
 END_TEST
 
-START_TEST (initRNResult_sets_error_to_0)
+START_TEST (initRNResult_sets_arabic_value_to_zero)
+{
+	initRNResult(result);
+	
+	ck_assert_uint_eq(0, result->arabic);
+}
+END_TEST
+
+START_TEST (initRNResult_sets_error_to_zero)
 {
 	initRNResult(result);
 	
@@ -36,11 +44,19 @@ START_TEST (initRNResult_sets_error_to_0)
 }
 END_TEST
 
-START_TEST (clearRNResult_sets_value_to_NULL)
+START_TEST (clearRNResult_sets_roman_value_to_NULL)
 {
 	clearRNResult(result);
 	
-	ck_assert_ptr_eq(NULL, result->value);
+	ck_assert_ptr_eq(NULL, result->roman);
+}
+END_TEST
+
+START_TEST (clearRNResult_sets_arabic_value_to_zero)
+{
+	clearRNResult(result);
+	
+	ck_assert_uint_eq(0, result->arabic);
 }
 END_TEST
 
@@ -69,10 +85,12 @@ Suite * make_rn_result_suite(void) {
 
     tc_rn_result = tcase_create("Convenience functions");
     tcase_add_checked_fixture(tc_rn_result, setup_rn_result_tests, teardown_rn_result_tests);
-	tcase_add_test(tc_rn_result, initRNResult_sets_value_to_empty_string);
-	tcase_add_test(tc_rn_result, initRNResult_sets_error_to_0);
-    tcase_add_test(tc_rn_result, clearRNResult_sets_value_to_NULL);
+	tcase_add_test(tc_rn_result, initRNResult_sets_roman_value_to_empty_string);
+    tcase_add_test(tc_rn_result, initRNResult_sets_arabic_value_to_zero);
+	tcase_add_test(tc_rn_result, initRNResult_sets_error_to_zero);
+    tcase_add_test(tc_rn_result, clearRNResult_sets_roman_value_to_NULL);
     tcase_add_test(tc_rn_result, clearRNResult_sets_error_to_NULL);
+    tcase_add_test(tc_rn_result, clearRNResult_sets_arabic_value_to_zero);
     tcase_add_test(tc_rn_result, setError_sets_error_to_provided_value);
     
     suite_add_tcase(s, tc_rn_result);
