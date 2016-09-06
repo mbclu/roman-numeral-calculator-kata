@@ -97,7 +97,7 @@ START_TEST (subtraction_with_a_result_equal_to_zero_results_in_an_empty_result_v
 }
 END_TEST
 
-START_TEST (input_which_fails_to_be_converted_to_int_should_return_empty_string_when_added)
+START_TEST (augend_which_fails_to_be_converted_to_int_should_return_empty_string_when_added)
 {
 	add(result, "AHHHHHHHH", "I");
 	ck_assert_uint_eq(ERROR_INVALID_INPUT, result->error->number);
@@ -105,10 +105,26 @@ START_TEST (input_which_fails_to_be_converted_to_int_should_return_empty_string_
 }
 END_TEST
 
-START_TEST (input_which_fails_to_be_converted_to_int_should_return_empty_string_when_subtracted)
+START_TEST (addend_which_fails_to_be_converted_to_int_should_return_empty_string_when_added)
+{
+	add(result, "I", "IIIIIIIII");
+	ck_assert_uint_eq(ERROR_BAD_SEQUENCE, result->error->number);
+	ck_assert_str_eq("", result->value);
+}
+END_TEST
+
+START_TEST (minuend_which_fails_to_be_converted_to_int_should_return_empty_string_when_subtracted)
 {
 	subtract(result, "I", "IIIIIIIII");
 	ck_assert_uint_eq(ERROR_BAD_SEQUENCE, result->error->number);
+	ck_assert_str_eq("", result->value);
+}
+END_TEST
+
+START_TEST (subtrahend_which_fails_to_be_converted_to_int_should_return_empty_string_when_subtracted)
+{
+	subtract(result, "AHHHHHHHH", "I");
+	ck_assert_uint_eq(ERROR_INVALID_INPUT, result->error->number);
 	ck_assert_str_eq("", result->value);
 }
 END_TEST
@@ -140,8 +156,10 @@ Suite * make_calculator_suite(void) {
 	tcase_add_test(tc_validation, addition_with_a_result_greater_than_3999_results_in_an_empty_result_value);
 	tcase_add_test(tc_validation, subtraction_with_a_result_equal_to_zero_results_in_error);
 	tcase_add_test(tc_validation, subtraction_with_a_result_equal_to_zero_results_in_an_empty_result_value);
-	tcase_add_test(tc_validation, input_which_fails_to_be_converted_to_int_should_return_empty_string_when_added);
-	tcase_add_test(tc_validation, input_which_fails_to_be_converted_to_int_should_return_empty_string_when_subtracted);
+	tcase_add_test(tc_validation, augend_which_fails_to_be_converted_to_int_should_return_empty_string_when_added);
+	tcase_add_test(tc_validation, addend_which_fails_to_be_converted_to_int_should_return_empty_string_when_added);
+	tcase_add_test(tc_validation, minuend_which_fails_to_be_converted_to_int_should_return_empty_string_when_subtracted);
+	tcase_add_test(tc_validation, subtrahend_which_fails_to_be_converted_to_int_should_return_empty_string_when_subtracted);
     
     suite_add_tcase(s, tc_addition);
     suite_add_tcase(s, tc_subtraction);
