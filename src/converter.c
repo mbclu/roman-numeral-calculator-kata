@@ -8,39 +8,38 @@ static const int appendCharAndDecrement(char *resultString, const int value, con
 
 const int convertToInt(const char *romanInput, RNError *error) {
 	int result = 0;
-	int parseIndex = 0;
-	int shiftAmount = 2;
 	int prevDigitIndex = INVALID_INDEX;
-
-	int lengthToParse;
-	for (lengthToParse = strlen(romanInput); lengthToParse > 0; lengthToParse -= shiftAmount) {
+	int totalLength = strlen(romanInput);
+	int lengthToParse = totalLength;
+	
+	while (lengthToParse > 0) {
 		int digitIndex = 0;
+		char *parseMarker = romanInput + totalLength - lengthToParse;
+		int shiftAmount;
+
 		if (1 == lengthToParse) {
 			shiftAmount = 1;
 		} else {
 			shiftAmount = 2;
 		}
-		digitIndex = lookUpDigitIndex(romanInput + parseIndex, shiftAmount);
+		
+		digitIndex = lookUpDigitIndex(parseMarker, shiftAmount);
 		if (INVALID_INDEX == digitIndex) {
 			if (1 == shiftAmount) {
 				setError(error, ERROR_INVALID_INPUT);
 				return 0;
 			}
 			shiftAmount = 1;
-			digitIndex = lookUpDigitIndex(romanInput + parseIndex, shiftAmount);
+			digitIndex = lookUpDigitIndex(parseMarker, 1);
 		}
-		if (prevDigitIndex == digitIndex) {
-			setError(error, ERROR_BAD_SEQUENCE);
-			return 0;
-		}
-		if (prevDigitIndex > digitIndex) {
-			printf("digit index: %i\tprevious: %i\n", digitIndex, prevDigitIndex);
+		
+		if (prevDigitIndex >= digitIndex) {
 			setError(error, ERROR_BAD_SEQUENCE);
 			return 0;
 		}
 		
 		prevDigitIndex = digitIndex;
-		parseIndex += shiftAmount;
+		lengthToParse -= shiftAmount;
 		result += romanNumeralValues[digitIndex].value;
 	}
 	

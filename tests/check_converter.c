@@ -114,7 +114,7 @@ END_TEST
 
 START_TEST (input_out_of_sequence_results_in_error)
 {
-	ck_assert_uint_eq(0, convertToInt("IM", result->error));
+	ck_assert_uint_eq(0, convertToInt("IL", result->error));
 	ck_assert_uint_eq(ERROR_BAD_SEQUENCE, result->error->number);
 	ck_assert_str_eq("Out of sequence input received", result->error->text);
 }
