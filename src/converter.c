@@ -33,6 +33,11 @@ const int convertToInt(const char *romanInput, RNError *error) {
 			setError(error, ERROR_BAD_SEQUENCE);
 			return 0;
 		}
+		if (prevDigitIndex > digitIndex) {
+			printf("digit index: %i\tprevious: %i\n", digitIndex, prevDigitIndex);
+			setError(error, ERROR_BAD_SEQUENCE);
+			return 0;
+		}
 		
 		prevDigitIndex = digitIndex;
 		parseIndex += shiftAmount;
