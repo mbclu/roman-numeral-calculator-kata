@@ -120,6 +120,13 @@ START_TEST (input_out_of_sequence_results_in_error)
 }
 END_TEST
 
+START_TEST (more_than_one_invalid_character_results_in_invalid_input_error)
+{
+	ck_assert_uint_eq(0, convertToInt("AH", result->error));
+	ck_assert_uint_eq(ERROR_INVALID_INPUT, result->error->number);
+}
+END_TEST
+
 START_TEST (one_is_represented_by_the_letter_I)
 {
 	convertToNumeral(result, 1);
@@ -216,6 +223,7 @@ Suite * make_converter_suite(void) {
     tcase_add_test(tc_convert_validations, input_with_more_than_one_greater_numerals_results_in_error);
     tcase_add_test(tc_convert_validations, input_with_more_than_three_lesser_numerals_results_in_error);
     tcase_add_test(tc_convert_validations, input_out_of_sequence_results_in_error);
+    tcase_add_test(tc_convert_validations, more_than_one_invalid_character_results_in_invalid_input_error);
       
     tc_convert_to_numeral = tcase_create("Convert To Numeral");
     tcase_add_checked_fixture(tc_convert_to_numeral, setup_converter_tests, teardown_converter_tests);

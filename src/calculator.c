@@ -1,19 +1,29 @@
 #include "calculator.h"
 
-void add(RNResult *sum, const char *augend, const char *addend) {
-	int arabicSum = convertToInt(augend, sum->error) + convertToInt(addend, sum->error);
-	if (arabicSum > MAX_ROMAN_VALUE) {
-		setError(sum->error, ERROR_GREATER_THAN_MAX);
-		return;
+void add(RNResult *sumResult, const char *augend, const char *addend) {
+	int arabicSum = 0;
+	int augendValue = convertToInt(augend, sumResult->error);
+	if (ERROR_NONE == sumResult->error->number) {
+		int addendValue = convertToInt(addend, sumResult->error);
+		arabicSum = augendValue + addendValue;
+		if (arabicSum > MAX_ROMAN_VALUE) {
+			setError(sumResult->error, ERROR_GREATER_THAN_MAX);
+			return;
+		}
+		convertToNumeral(sumResult, arabicSum);	
 	}
-	convertToNumeral(sum, arabicSum);
 }
 
-void subtract(RNResult *difference, const char *minuend, const char *subtrahend) {
-	int arabicDifference = convertToInt(minuend, difference->error) - convertToInt(subtrahend, difference->error);
-	if (arabicDifference < MIN_ROMAN_VALUE) {
-		setError(difference->error, ERROR_LESS_THAN_MIN);
-		return;
+void subtract(RNResult *diffResult, const char *minuend, const char *subtrahend) {
+	int arabicDifference = 0;
+	int minuendValue = convertToInt(minuend, diffResult->error);
+	int subtrahendValue = convertToInt(subtrahend, diffResult->error);
+	if (ERROR_NONE == diffResult->error->number) {
+		arabicDifference = minuendValue - subtrahendValue;
+		if (arabicDifference < MIN_ROMAN_VALUE) {
+			setError(diffResult->error, ERROR_LESS_THAN_MIN);
+			return;
+		}
 	}
-	convertToNumeral(difference, arabicDifference);
+	convertToNumeral(diffResult, arabicDifference);
 }

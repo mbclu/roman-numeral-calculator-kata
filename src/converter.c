@@ -25,15 +25,15 @@ const int convertToInt(const char *romanInput, RNError *error) {
 		
 		digitIndex = lookUpDigitIndex(parseMarker, shiftAmount);
 		if (INVALID_INDEX == digitIndex) {
-			if (1 == shiftAmount) {
-				setError(error, ERROR_INVALID_INPUT);
-				return 0;
-			}
-			shiftAmount = 1;
-			digitIndex = lookUpDigitIndex(parseMarker, 1);
+			digitIndex = lookUpDigitIndex(parseMarker, --shiftAmount);
 		}
 		
-		if (prevDigitIndex >= digitIndex) {
+		if (0 == shiftAmount) {
+			setError(error, ERROR_INVALID_INPUT);
+			return 0;
+		}
+		
+		if (INVALID_INDEX != digitIndex && prevDigitIndex >= digitIndex) {
 			setError(error, ERROR_BAD_SEQUENCE);
 			return 0;
 		}
