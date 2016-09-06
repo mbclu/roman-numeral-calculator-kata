@@ -1,5 +1,7 @@
 #include "converter.h"
 
+static const int INVALID_INDEX = -1;
+
 static void toUpper(char *toUpperResult, const char* text, const int length);
 static const int lookUpDigitIndex(const char *romanDigits, const int digitCount);
 static const int appendCharAndDecrement(char *resultString, const int value, const RNValue toAppend);
@@ -8,7 +10,8 @@ const int convertToInt(const char *romanInput, RNError *error) {
 	int result = 0;
 	int parseIndex = 0;
 	int shiftAmount = 2;
-	
+	int prevDigitIndex = INVALID_INDEX;
+
 	int lengthToParse;
 	for (lengthToParse = strlen(romanInput); lengthToParse > 0; lengthToParse -= shiftAmount) {
 		int digitIndex = 0;
@@ -18,7 +21,7 @@ const int convertToInt(const char *romanInput, RNError *error) {
 			shiftAmount = 2;
 		}
 		digitIndex = lookUpDigitIndex(romanInput + parseIndex, shiftAmount);
-		if (-1 == digitIndex) {
+		if (INVALID_INDEX == digitIndex) {
 			if (1 == shiftAmount) {
 				setError(error, ERROR_INVALID_INPUT);
 				return 0;
@@ -26,6 +29,12 @@ const int convertToInt(const char *romanInput, RNError *error) {
 			shiftAmount = 1;
 			digitIndex = lookUpDigitIndex(romanInput + parseIndex, shiftAmount);
 		}
+		if (prevDigitIndex == digitIndex) {
+			setError(error, ERROR_BAD_SEQUENCE);
+			return 0;
+		}
+		
+		prevDigitIndex = digitIndex;
 		parseIndex += shiftAmount;
 		result += romanNumeralValues[digitIndex].value;
 	}
@@ -65,7 +74,7 @@ static const int lookUpDigitIndex(const char *romanDigits, const int digitCount)
 		}
 	}
 
-	return -1;
+	return INVALID_INDEX;
 }
 
 static void toUpper(char *toUpperResult, const char* text, const int length) {
