@@ -1,8 +1,67 @@
 #include "calculator.h"
 
-void enterInput(RNResult *inputResult, const char *input) {
-	strcpy(inputResult->roman, input);
-	inputResult->arabic = convertToInt(input, inputResult->error);
+static RNResult *calculatorResult;
+static RNResult *currentCalculatorInput;
+static char currentOperator;
+
+static void saveResult(RNResult *result, const char *romanValue);
+
+void enterInput(const char *input) {
+	currentCalculatorInput = malloc(sizeof * currentCalculatorInput);
+	initRNResult(currentCalculatorInput);
+	saveResult(currentCalculatorInput, input);
+}
+
+void enterOperator(const char operator) {
+	calculatorResult = malloc(sizeof * calculatorResult);
+	initRNResult(calculatorResult);
+	if (currentCalculatorInput != NULL && currentCalculatorInput->roman != NULL) {
+		if (operator == '+' || operator == '-') {
+			currentOperator = operator;
+			saveResult(calculatorResult, currentCalculatorInput->roman);
+		} else {
+			setError(calculatorResult->error, ERROR_BAD_OPERATOR);
+		}
+	} else {
+		if (calculatorResult != NULL && calculatorResult->error != NULL) {
+			setError(calculatorResult->error, ERROR_NO_INPUT);
+		}
+	}
+}
+
+void recallCurrentInput(RNResult *currentInputBuffer) {
+	memcpy(currentInputBuffer, currentCalculatorInput, sizeof * currentInputBuffer);
+}
+
+void recallResult(RNResult *resultBuffer) {
+	memcpy(resultBuffer, calculatorResult, sizeof * resultBuffer);
+}
+
+const char recallOperator() {
+	return currentOperator;
+}
+
+void clearResult() {
+	if (calculatorResult != NULL) {
+		clearRNResult(calculatorResult);
+		free(calculatorResult);
+		calculatorResult = NULL;
+	}
+}
+
+void clearCurrentInput() {
+	if (currentCalculatorInput != NULL) {
+		clearRNResult(currentCalculatorInput);
+		free(currentCalculatorInput);
+		currentCalculatorInput = NULL;
+	}
+}
+
+static void saveResult(RNResult *result, const char *romanValue) {
+	//result = malloc(sizeof * result);
+	//initRNResult(result);
+	strcpy(result->roman, romanValue);
+	result->arabic = convertToInt(romanValue, result->error);
 }
 
 void add(RNResult *sumResult, const char *augend, const char *addend) {

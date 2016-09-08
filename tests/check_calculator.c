@@ -109,7 +109,7 @@ START_TEST (addend_which_fails_to_be_converted_to_int_should_return_empty_string
 {
 	add(result, "I", "IIIIIIIII");
 	ck_assert_uint_eq(ERROR_BAD_SEQUENCE, result->error->number);
-	ck_assert_str_eq("", result->value);
+	ck_assert_str_eq("", result->roman);
 }
 END_TEST
 
@@ -121,19 +121,59 @@ START_TEST (minuend_which_fails_to_be_converted_to_int_should_return_empty_strin
 }
 END_TEST
 
+START_TEST (subtrahend_which_fails_to_be_converted_to_int_should_return_empty_string_when_subtracted)
+{
+	subtract(result, "AHHHHHHHH", "I");
+	ck_assert_uint_eq(ERROR_INVALID_INPUT, result->error->number);
+	ck_assert_str_eq("", result->roman);
+}
+END_TEST
+
 START_TEST (input_which_is_entered_is_stored_in_the_given_result_buffer)
 {
-	enterInput(result, "i");
+	enterInput("i");
+	recallCurrentInput(result);
 	ck_assert_str_eq("i", result->roman);
 	ck_assert_uint_eq(1, result->arabic);
 }
 END_TEST
 
-START_TEST (subtrahend_which_fails_to_be_converted_to_int_should_return_empty_string_when_subtracted)
+START_TEST (when_plus_operator_is_input_the_current_calculator_input_is_stored_as_the_result)
 {
-	subtract(result, "AHHHHHHHH", "I");
-	ck_assert_uint_eq(ERROR_INVALID_INPUT, result->error->number);
-	ck_assert_str_eq("", result->value);
+	enterInput("vi");
+	enterOperator('+');
+	recallResult(result);
+	ck_assert_uint_eq('+', recallOperator());
+	ck_assert_str_eq("vi", result->roman);
+}
+END_TEST
+
+START_TEST (when_minus_operator_is_input_the_current_calculator_input_is_stored_as_the_result)
+{
+	enterInput("mx");
+	enterOperator('-');
+	recallResult(result);
+	ck_assert_uint_eq('-', recallOperator());
+	ck_assert_str_eq("mx", result->roman);
+}
+END_TEST
+
+START_TEST (when_non_plus_or_minus_operator_is_input_an_error_is_stored)
+{
+	enterInput("I");
+	enterOperator('8');
+	recallResult(result);	
+	ck_assert_uint_eq(ERROR_BAD_OPERATOR, result->error->number);
+	ck_assert_str_eq("Invalid operator (must be one of \'+\' or \'-\')", result->error->text);
+}
+END_TEST
+
+START_TEST (when_operator_is_input_before_valid_roman_input_error_is_stored)
+{
+	enterOperator('+');
+	recallResult(result);
+	ck_assert_uint_eq(ERROR_NO_INPUT, result->error->number);
+	ck_assert_str_eq("Must input valid roman numeral before math operator", result->error->text);
 }
 END_TEST
 
@@ -149,8 +189,11 @@ Suite * make_calculator_suite(void) {
 	tc_enter_input = tcase_create("Entering Input");
 	tcase_add_checked_fixture(tc_enter_input, setup_calculator_tests, teardown_calculator_tests);
 	tcase_add_test(tc_enter_input, input_which_is_entered_is_stored_in_the_given_result_buffer);
+	tcase_add_test(tc_enter_input, when_plus_operator_is_input_the_current_calculator_input_is_stored_as_the_result);
+	tcase_add_test(tc_enter_input, when_minus_operator_is_input_the_current_calculator_input_is_stored_as_the_result);
+	tcase_add_test(tc_enter_input, when_non_plus_or_minus_operator_is_input_an_error_is_stored);
+	tcase_add_test(tc_enter_input, when_operator_is_input_before_valid_roman_input_error_is_stored);
 	
-    /*
     tc_addition = tcase_create("Addition");
     tcase_add_checked_fixture(tc_addition, setup_calculator_tests, teardown_calculator_tests);
     tcase_add_test(tc_addition, one_plus_one_is_two);
@@ -178,7 +221,6 @@ Suite * make_calculator_suite(void) {
     suite_add_tcase(s, tc_addition);
     suite_add_tcase(s, tc_subtraction);
     suite_add_tcase(s, tc_validation);
-	*/
     suite_add_tcase(s, tc_enter_input);
 
     return s;
