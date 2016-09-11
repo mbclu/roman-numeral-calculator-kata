@@ -172,8 +172,71 @@ START_TEST (when_operator_is_input_before_valid_roman_input_error_is_stored)
 {
 	enterOperator('+');
 	recallResult(result);
-	ck_assert_uint_eq(ERROR_NO_INPUT, result->error->number);
-	ck_assert_str_eq("Must input valid roman numeral before math operator", result->error->text);
+	ck_assert_uint_eq(ERROR_NO_INPUT_BEFORE_OPERATOR, result->error->number);
+	ck_assert_str_eq("Must input roman numeral before math operator", result->error->text);
+}
+END_TEST
+
+START_TEST (given_the_sequence_valid_input_plus_operator_valid_input_compute_the_addition_result_is_stored_in_calculatorResult)
+{
+	enterInput("V");
+	enterOperator('+');
+	enterInput("X");
+	compute();
+	recallResult(result);
+	ck_assert_str_eq("XV", result->roman);
+}
+END_TEST
+
+START_TEST (given_the_sequence_valid_input_minus_operator_valid_input_compute_the_subtraction_result_is_stored_in_calculatorResult)
+{
+	enterInput("XX");
+	enterOperator('-');
+	enterInput("XI");
+	compute();
+	recallResult(result);
+	ck_assert_str_eq("IX", result->roman);
+}
+END_TEST
+
+START_TEST (compute_sets_no_operator_error_when_operator_is_not_stored)
+{
+	compute();
+	recallResult(result);
+	ck_assert_uint_eq(ERROR_NO_OPERATOR, result->error->number);
+	ck_assert_str_eq("Must input operator before compute", result->error->text);
+}
+END_TEST
+
+START_TEST (current_input_is_reset_after_operator_input)
+{
+	enterInput("MM");
+	enterOperator('-');
+	recallCurrentInput(result);
+	ck_assert_str_eq("", result->roman);
+}
+END_TEST
+
+START_TEST (compute_sets_no_current_input_error_when_nothing_is_stored_in_current_input)
+{
+	enterInput("MM");
+	enterOperator('-');
+	compute();
+	recallResult(result);
+	ck_assert_uint_eq(ERROR_NO_INPUT_BEFORE_COMPUTE, result->error->number);
+	ck_assert_str_eq("Must input roman numeral before compute", result->error->text);
+}
+END_TEST
+
+START_TEST (operator_and_current_input_are_reset_after_compute)
+{
+	enterInput("MM");
+	enterOperator('-');
+	enterInput("M");
+	compute();
+	recallCurrentInput(result);
+	ck_assert_str_eq("", result->roman);
+	ck_assert_uint_eq(0, recallOperator());
 }
 END_TEST
 
@@ -193,6 +256,12 @@ Suite * make_calculator_suite(void) {
 	tcase_add_test(tc_enter_input, when_minus_operator_is_input_the_current_calculator_input_is_stored_as_the_result);
 	tcase_add_test(tc_enter_input, when_non_plus_or_minus_operator_is_input_an_error_is_stored);
 	tcase_add_test(tc_enter_input, when_operator_is_input_before_valid_roman_input_error_is_stored);
+	tcase_add_test(tc_enter_input, given_the_sequence_valid_input_plus_operator_valid_input_compute_the_addition_result_is_stored_in_calculatorResult);
+	tcase_add_test(tc_enter_input, given_the_sequence_valid_input_minus_operator_valid_input_compute_the_subtraction_result_is_stored_in_calculatorResult);
+	tcase_add_test(tc_enter_input, compute_sets_no_operator_error_when_operator_is_not_stored);
+	tcase_add_test(tc_enter_input, current_input_is_reset_after_operator_input);
+	tcase_add_test(tc_enter_input, compute_sets_no_current_input_error_when_nothing_is_stored_in_current_input);
+	tcase_add_test(tc_enter_input, operator_and_current_input_are_reset_after_compute);
 	
     tc_addition = tcase_create("Addition");
     tcase_add_checked_fixture(tc_addition, setup_calculator_tests, teardown_calculator_tests);

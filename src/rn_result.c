@@ -11,9 +11,10 @@ void initRNResult(RNResult *result) {
 
 void clearRNResult(RNResult *result) {
 	free(result->roman);
-	result->arabic = 0;
 	result->roman = NULL;
+	free(result->error);
 	result->error = NULL;
+	result->arabic = 0;
 }
 
 void setError(RNError *error, const rn_error_t errorType) {

@@ -5,12 +5,11 @@
 
 void enterInput(const char *input);
 void enterOperator(const char operator);
+void compute();
 
 void recallCurrentInput(RNResult *currentInputBuffer);
 void recallResult(RNResult *resultBuffer);
 const char recallOperator();
-void clearResult();
-void clearCurrentInput();
 
 void add(RNResult *sumResult, const char *augend, const char *addend);
 void subtract(RNResult *diffResult, const char *minuend, const char *subtrahend);
