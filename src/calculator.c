@@ -4,9 +4,12 @@ static RNResult *calculatorResult;
 static RNResult *currentCalculatorInput;
 static char currentOperator;
 
+static void reset(RNResult **result);
 static void resetResult();
-static void initResult();
 static void resetCurrentInput();
+
+static void init(RNResult **result);
+static void initResult();
 static void initCurrentInput();
 
 static void saveResult(RNResult *result, const char *romanValue);
@@ -77,30 +80,35 @@ const char recallOperator() {
 	return currentOperator;
 }
 
-static void resetResult() {
-	if (calculatorResult != NULL) {
-		clearRNResult(calculatorResult);
-		free(calculatorResult);
+static void init(RNResult **result) {
+	if (*result == NULL) {
+		*result = malloc(sizeof **result);
+		initRNResult(*result);
 	}
-	calculatorResult = NULL;
+}
+
+static void reset(RNResult **result) {
+	if (*result != NULL) {
+		clearRNResult(*result);
+		free(*result);
+	}
+	*result = NULL;
+}
+
+static void resetResult() {
+	reset(&calculatorResult);
 }
 
 static void initResult() {
-	calculatorResult = malloc(sizeof * calculatorResult);
-	initRNResult(calculatorResult);
+	init(&calculatorResult);
 }
 
 static void resetCurrentInput() {
-	if (currentCalculatorInput != NULL) {
-		clearRNResult(currentCalculatorInput);
-		free(currentCalculatorInput);
-	}
-	currentCalculatorInput = NULL;
+	reset(&currentCalculatorInput);
 }
 
 static void initCurrentInput() {
-	currentCalculatorInput = malloc(sizeof * currentCalculatorInput);
-	initRNResult(currentCalculatorInput);
+	init(&currentCalculatorInput);
 }
 
 static void saveResult(RNResult *result, const char *romanValue) {
