@@ -9,25 +9,21 @@ static void resetResult();
 static void resetCurrentInput();
 
 static void init(RNResult **result);
-static void initResult();
-static void initCurrentInput();
 
 static void saveResult(RNResult *result, const char *romanValue);
 static int isValidOperator(const char operator);
 
 void enterInput(const char *input) {
 	resetCurrentInput();
-	initCurrentInput();
 	saveResult(currentCalculatorInput, input);
 }
 
 void enterOperator(const char operator) {
 	if (currentCalculatorInput == NULL) {
-		initResult();
+		resetResult();
 		setError(calculatorResult->error, ERROR_NO_INPUT_BEFORE_OPERATOR);
 	} else {
 		resetResult();
-		initResult();
 		if (isValidOperator(operator)) {
 			currentOperator = operator;
 			saveResult(calculatorResult, currentCalculatorInput->roman);
@@ -43,14 +39,12 @@ void compute() {
 	
 	if (NULL == calculatorResult || !isValidOperator(currentOperator)) {
 		resetResult();
-		initResult();
 		setError(calculatorResult->error, ERROR_NO_OPERATOR);
 	} else {
 		previousResultArabic = calculatorResult->arabic;
 		resetResult();
-		initResult();
 
-		if (currentCalculatorInput == NULL) {
+		if (0 == currentCalculatorInput->arabic) {
 			setError(calculatorResult->error, ERROR_NO_INPUT_BEFORE_COMPUTE);
 		} else {			
 			if ('+' == currentOperator) {
@@ -97,17 +91,11 @@ static void reset(RNResult **result) {
 
 static void resetResult() {
 	reset(&calculatorResult);
-}
-
-static void initResult() {
 	init(&calculatorResult);
 }
 
 static void resetCurrentInput() {
 	reset(&currentCalculatorInput);
-}
-
-static void initCurrentInput() {
 	init(&currentCalculatorInput);
 }
 

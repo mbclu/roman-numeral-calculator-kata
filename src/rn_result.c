@@ -3,9 +3,9 @@
 #include "rn_result.h"
 
 void initRNResult(RNResult *result) {
+	result->roman = calloc(MAX_ROMAN_NUMERAL_STRING_LENGTH, sizeof(char));
 	result->error = malloc(sizeof result->error);
 	setError(result->error, ERROR_NONE);
-	result->roman = calloc(MAX_ROMAN_NUMERAL_STRING_LENGTH, sizeof(char));
 	result->arabic = 0;
 }
 
