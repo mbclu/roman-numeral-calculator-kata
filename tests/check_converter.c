@@ -15,7 +15,7 @@ void setup_converter_tests() {
 }
 
 void teardown_converter_tests() {
-	clearRNResult(result);
+	freeRNResult(result);
 	free(result);
 }
 

@@ -15,7 +15,7 @@ void setup_rn_result_tests() {
 }
 
 void teardown_rn_result_tests() {
-	clearRNResult(result);
+	freeRNResult(result);
 	free(result);
 }
 
@@ -46,7 +46,7 @@ END_TEST
 
 START_TEST (clearRNResult_sets_roman_value_to_NULL)
 {
-	clearRNResult(result);
+	freeRNResult(result);
 	
 	ck_assert_ptr_eq(NULL, result->roman);
 }
@@ -54,7 +54,7 @@ END_TEST
 
 START_TEST (clearRNResult_sets_arabic_value_to_zero)
 {
-	clearRNResult(result);
+	freeRNResult(result);
 	
 	ck_assert_uint_eq(0, result->arabic);
 }
@@ -62,7 +62,7 @@ END_TEST
 
 START_TEST (clearRNResult_sets_error_to_NULL)
 {
-	clearRNResult(result);
+	freeRNResult(result);
 	
 	ck_assert_ptr_eq(NULL, result->error);
 }

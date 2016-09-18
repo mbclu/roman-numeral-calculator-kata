@@ -4,58 +4,60 @@ static RNResult *calculatorResult;
 static RNResult *currentCalculatorInput;
 static char currentOperator;
 
-static void reset(RNResult **result);
-static void resetResult();
-static void resetCurrentInput();
-
-static void init(RNResult **result);
-
+static void allocResult(RNResult **result);
+static void freeResult(RNResult **result);
+static void reallocResult(RNResult **result);
 static void saveResult(RNResult *result, const char *romanValue);
+
 static int isValidOperator(const char operator);
 
 void enterInput(const char *input) {
-	resetCurrentInput();
+	reallocResult(&currentCalculatorInput);
 	saveResult(currentCalculatorInput, input);
 }
 
 void enterOperator(const char operator) {
-	if (currentCalculatorInput == NULL) {
-		resetResult();
+	reallocResult(&calculatorResult);
+	
+	if (NULL == currentCalculatorInput) {
 		setError(calculatorResult->error, ERROR_NO_INPUT_BEFORE_OPERATOR);
+	} else if (!isValidOperator(operator)) {
+		setError(calculatorResult->error, ERROR_BAD_OPERATOR);
 	} else {
-		resetResult();
-		if (isValidOperator(operator)) {
-			currentOperator = operator;
-			saveResult(calculatorResult, currentCalculatorInput->roman);
-		} else {
-			setError(calculatorResult->error, ERROR_BAD_OPERATOR);
-		}
+		currentOperator = operator;
+		saveResult(calculatorResult, currentCalculatorInput->roman);
+		reallocResult(&currentCalculatorInput);
 	}
-	resetCurrentInput();
 }
 
 void compute() {
-	int previousResultArabic = 0;
 	
-	if (NULL == calculatorResult || !isValidOperator(currentOperator)) {
-		resetResult();
-		setError(calculatorResult->error, ERROR_NO_OPERATOR);
+	if (NULL == calculatorResult) {
+		reallocResult(&calculatorResult);
+		setError(calculatorResult->error, ERROR_NO_PREVIOUS_INPUT_BEFORE_COMPUTE);
+	}
+	else if (0 == currentCalculatorInput->arabic) {
+		reallocResult(&calculatorResult);
+		setError(calculatorResult->error, ERROR_NO_INPUT_BEFORE_COMPUTE);
 	} else {
-		previousResultArabic = calculatorResult->arabic;
-		resetResult();
-
-		if (0 == currentCalculatorInput->arabic) {
-			setError(calculatorResult->error, ERROR_NO_INPUT_BEFORE_COMPUTE);
-		} else {			
-			if ('+' == currentOperator) {
-				convertToNumeral(calculatorResult, previousResultArabic + currentCalculatorInput->arabic);
-			} else {
-				convertToNumeral(calculatorResult, previousResultArabic - currentCalculatorInput->arabic);
-			}
+		const int previousInputArabic = calculatorResult->arabic;
+		const int currentInputArabic = currentCalculatorInput->arabic;
+		reallocResult(&calculatorResult);
+		
+		switch(currentOperator) {
+			case '+':
+				convertToNumeral(calculatorResult, previousInputArabic + currentInputArabic);
+				break;
+			case '-':
+				convertToNumeral(calculatorResult, previousInputArabic - currentInputArabic);
+				break;
+			default:
+				setError(calculatorResult->error, ERROR_NO_OPERATOR);
 		}
 	}
+
 	currentOperator = 0;
-	resetCurrentInput();
+	reallocResult(&currentCalculatorInput);
 }
 
 void recallCurrentInput(RNResult *currentInputBuffer) {
@@ -74,29 +76,24 @@ const char recallOperator() {
 	return currentOperator;
 }
 
-static void init(RNResult **result) {
+static void reallocResult(RNResult **result) {
+	freeResult(result);
+	allocResult(result);
+}
+
+static void allocResult(RNResult **result) {
 	if (*result == NULL) {
 		*result = malloc(sizeof **result);
 		initRNResult(*result);
 	}
 }
 
-static void reset(RNResult **result) {
+static void freeResult(RNResult **result) {
 	if (*result != NULL) {
-		clearRNResult(*result);
+		freeRNResult(*result);
 		free(*result);
 	}
 	*result = NULL;
-}
-
-static void resetResult() {
-	reset(&calculatorResult);
-	init(&calculatorResult);
-}
-
-static void resetCurrentInput() {
-	reset(&currentCalculatorInput);
-	init(&currentCalculatorInput);
 }
 
 static void saveResult(RNResult *result, const char *romanValue) {

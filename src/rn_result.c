@@ -9,7 +9,7 @@ void initRNResult(RNResult *result) {
 	result->arabic = 0;
 }
 
-void clearRNResult(RNResult *result) {
+void freeRNResult(RNResult *result) {
 	free(result->roman);
 	result->roman = NULL;
 	free(result->error);

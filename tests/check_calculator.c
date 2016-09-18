@@ -14,7 +14,7 @@ void setup_calculator_tests() {
 }
 
 void teardown_calculator_tests() {
-	clearRNResult(result);
+	freeRNResult(result);
 	free(result);
 }
 
@@ -199,8 +199,20 @@ START_TEST (given_the_sequence_valid_input_minus_operator_valid_input_compute_th
 }
 END_TEST
 
-START_TEST (compute_sets_no_operator_error_when_operator_is_not_stored)
+START_TEST (compute_sets_no_input_error_when_previous_result_is_not_stored)
 {
+	enterInput("VII");
+	compute();
+	recallResult(result);
+	ck_assert_uint_eq(ERROR_NO_PREVIOUS_INPUT_BEFORE_COMPUTE, result->error->number);
+	ck_assert_str_eq("Must input roman numeral before compute", result->error->text);
+}
+END_TEST
+
+START_TEST (compute_sets_no_operator_error_when_valid_operator_is_not_stored)
+{
+	enterInput("VII");
+	enterOperator('j');
 	compute();
 	recallResult(result);
 	ck_assert_uint_eq(ERROR_NO_OPERATOR, result->error->number);
@@ -224,7 +236,7 @@ START_TEST (compute_sets_no_current_input_error_when_nothing_is_stored_in_curren
 	compute();
 	recallResult(result);
 	ck_assert_uint_eq(ERROR_NO_INPUT_BEFORE_COMPUTE, result->error->number);
-	ck_assert_str_eq("Must input roman numeral before compute", result->error->text);
+	ck_assert_str_eq("Must input second roman numeral before compute", result->error->text);
 }
 END_TEST
 
@@ -258,7 +270,8 @@ Suite * make_calculator_suite(void) {
 	tcase_add_test(tc_enter_input, when_operator_is_input_before_valid_roman_input_error_is_stored);
 	tcase_add_test(tc_enter_input, given_the_sequence_valid_input_plus_operator_valid_input_compute_the_addition_result_is_stored_in_calculatorResult);
 	tcase_add_test(tc_enter_input, given_the_sequence_valid_input_minus_operator_valid_input_compute_the_subtraction_result_is_stored_in_calculatorResult);
-	tcase_add_test(tc_enter_input, compute_sets_no_operator_error_when_operator_is_not_stored);
+	tcase_add_test(tc_enter_input, compute_sets_no_input_error_when_previous_result_is_not_stored);
+	tcase_add_test(tc_enter_input, compute_sets_no_operator_error_when_valid_operator_is_not_stored);
 	tcase_add_test(tc_enter_input, current_input_is_reset_after_operator_input);
 	tcase_add_test(tc_enter_input, compute_sets_no_current_input_error_when_nothing_is_stored_in_current_input);
 	tcase_add_test(tc_enter_input, operator_and_current_input_are_reset_after_compute);

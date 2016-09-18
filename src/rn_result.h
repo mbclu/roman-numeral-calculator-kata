@@ -14,7 +14,7 @@ typedef struct roman_numeral_math_result_t {
 } RNResult;
 
 void initRNResult(RNResult *result);
-void clearRNResult(RNResult *result);
+void freeRNResult(RNResult *result);
 void setError(RNError *error, const rn_error_t errorType);
 
 #endif //RN_RESULT_H_
