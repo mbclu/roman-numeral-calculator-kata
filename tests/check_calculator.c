@@ -9,6 +9,7 @@
 RNResult * result;
 
 void setup_calculator_tests() {
+	resetCalculator();
 	result = malloc(sizeof *result);
 	initRNResult(result);
 }
@@ -16,6 +17,7 @@ void setup_calculator_tests() {
 void teardown_calculator_tests() {
 	freeRNResult(result);
 	free(result);
+	result = NULL;
 }
 
 START_TEST (one_plus_one_is_two)
@@ -138,21 +140,21 @@ START_TEST (input_which_is_entered_is_stored_in_the_given_result_buffer)
 }
 END_TEST
 
-START_TEST (when_plus_operator_is_input_the_current_calculator_input_is_stored_as_the_result)
+START_TEST (when_plus_operator_is_input_the_current_calculator_input_is_stored)
 {
 	enterInput("vi");
 	enterOperator('+');
-	recallResult(result);
+	recallStoredInput(result);
 	ck_assert_uint_eq('+', recallOperator());
 	ck_assert_str_eq("vi", result->roman);
 }
 END_TEST
 
-START_TEST (when_minus_operator_is_input_the_current_calculator_input_is_stored_as_the_result)
+START_TEST (when_minus_operator_is_input_the_current_calculator_input_is_stored)
 {
 	enterInput("mx");
 	enterOperator('-');
-	recallResult(result);
+	recallStoredInput(result);
 	ck_assert_uint_eq('-', recallOperator());
 	ck_assert_str_eq("mx", result->roman);
 }
@@ -220,15 +222,6 @@ START_TEST (compute_sets_no_operator_error_when_valid_operator_is_not_stored)
 }
 END_TEST
 
-START_TEST (current_input_is_reset_after_operator_input)
-{
-	enterInput("MM");
-	enterOperator('-');
-	recallCurrentInput(result);
-	ck_assert_str_eq("", result->roman);
-}
-END_TEST
-
 START_TEST (compute_sets_no_current_input_error_when_nothing_is_stored_in_current_input)
 {
 	enterInput("MM");
@@ -240,7 +233,7 @@ START_TEST (compute_sets_no_current_input_error_when_nothing_is_stored_in_curren
 }
 END_TEST
 
-START_TEST (operator_and_current_input_are_reset_after_compute)
+START_TEST (operator_and_stored_input_and_current_input_are_reset_after_compute)
 {
 	enterInput("MM");
 	enterOperator('-');
@@ -248,7 +241,40 @@ START_TEST (operator_and_current_input_are_reset_after_compute)
 	compute();
 	recallCurrentInput(result);
 	ck_assert_str_eq("", result->roman);
+	recallStoredInput(result);
+	ck_assert_str_eq("", result->roman);
 	ck_assert_uint_eq(0, recallOperator());
+}
+END_TEST
+
+START_TEST (resetCalculator_clears_out_current_input)
+{
+	enterInput("XVIII");
+	resetCalculator();
+	recallCurrentInput(result);
+	ck_assert_str_eq("", result->roman);
+}
+END_TEST
+
+START_TEST (resetCalculator_clears_out_stored_input)
+{
+	enterInput("XVIII");
+	enterOperator('+');
+	resetCalculator();
+	recallStoredInput(result);
+	ck_assert_str_eq("", result->roman);
+}
+END_TEST
+
+START_TEST (resetCalculator_clears_out_calculator_result)
+{
+	enterInput("XVIII");
+	enterOperator('+');
+	enterInput("XVIII");
+	compute();
+	resetCalculator();
+	recallResult(result);
+	ck_assert_str_eq("", result->roman);
 }
 END_TEST
 
@@ -264,17 +290,19 @@ Suite * make_calculator_suite(void) {
 	tc_enter_input = tcase_create("Entering Input");
 	tcase_add_checked_fixture(tc_enter_input, setup_calculator_tests, teardown_calculator_tests);
 	tcase_add_test(tc_enter_input, input_which_is_entered_is_stored_in_the_given_result_buffer);
-	tcase_add_test(tc_enter_input, when_plus_operator_is_input_the_current_calculator_input_is_stored_as_the_result);
-	tcase_add_test(tc_enter_input, when_minus_operator_is_input_the_current_calculator_input_is_stored_as_the_result);
+	tcase_add_test(tc_enter_input, when_plus_operator_is_input_the_current_calculator_input_is_stored);
+	tcase_add_test(tc_enter_input, when_minus_operator_is_input_the_current_calculator_input_is_stored);
 	tcase_add_test(tc_enter_input, when_non_plus_or_minus_operator_is_input_an_error_is_stored);
 	tcase_add_test(tc_enter_input, when_operator_is_input_before_valid_roman_input_error_is_stored);
 	tcase_add_test(tc_enter_input, given_the_sequence_valid_input_plus_operator_valid_input_compute_the_addition_result_is_stored_in_calculatorResult);
 	tcase_add_test(tc_enter_input, given_the_sequence_valid_input_minus_operator_valid_input_compute_the_subtraction_result_is_stored_in_calculatorResult);
 	tcase_add_test(tc_enter_input, compute_sets_no_input_error_when_previous_result_is_not_stored);
 	tcase_add_test(tc_enter_input, compute_sets_no_operator_error_when_valid_operator_is_not_stored);
-	tcase_add_test(tc_enter_input, current_input_is_reset_after_operator_input);
 	tcase_add_test(tc_enter_input, compute_sets_no_current_input_error_when_nothing_is_stored_in_current_input);
-	tcase_add_test(tc_enter_input, operator_and_current_input_are_reset_after_compute);
+	tcase_add_test(tc_enter_input, operator_and_stored_input_and_current_input_are_reset_after_compute);
+	tcase_add_test(tc_enter_input, resetCalculator_clears_out_current_input);
+	tcase_add_test(tc_enter_input, resetCalculator_clears_out_stored_input);
+	tcase_add_test(tc_enter_input, resetCalculator_clears_out_calculator_result);
 	
     tc_addition = tcase_create("Addition");
     tcase_add_checked_fixture(tc_addition, setup_calculator_tests, teardown_calculator_tests);
