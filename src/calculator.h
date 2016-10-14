@@ -3,7 +3,8 @@
 
 #include "converter.h"
 
-void recallCurrentInput(RNResult *currentInputBuffer);
+void recallCurrentInput(RNResult *resultBuffer);
+void recallStoredInput(RNResult *resultBuffer);
 void recallResult(RNResult *resultBuffer);
 const char recallOperator();
 
