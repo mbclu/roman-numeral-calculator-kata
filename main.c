@@ -1,44 +1,73 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <signal.h>
 #include "src/calculator.h"
 
+static char* input;
+static RNResult *result;
+
 static void printUsage(void);
+static int attemptInput(void);
+static int attemptOperator(void);
+static int printResult(void);
+static int checkForErrors(void);
 
 int main() {
-	char *firstInput = calloc(MAX_ROMAN_NUMERAL_STRING_LENGTH, sizeof(char));
-	char *secondInput = calloc(MAX_ROMAN_NUMERAL_STRING_LENGTH, sizeof(char));
-	char *result = calloc(MAX_ROMAN_NUMERAL_STRING_LENGTH, sizeof(char));
-	char operator;
-	
 	printUsage();
 	
-	scanf(" %s", firstInput);
-	getchar();
-	scanf(" %c", &operator);
-	getchar();
-	scanf(" %s", secondInput);
-
-	if ('+' == operator) {
-		add(result, firstInput, secondInput);
-		printf("%s + %s = %s\n", firstInput, secondInput, result);
-	} else if('-' == operator) {
-		subtract(result, firstInput, secondInput);
-		printf("%s - %s = %s\n", firstInput, secondInput, result);
-	} else {
-		printf("`%c` is an invalid operator! Please use either `+` or `-`\n", operator);
-	}
+	result = malloc(sizeof *result);
+	initRNResult(result);
+	resetCalculator();
 	
-	free(firstInput);
-	free(secondInput);
-	free(result);
+	if (0 != attemptInput()) { return 1; }
+	if (0 != attemptOperator()) { return 1; }
+	if (0 != attemptInput()) { return 1; }
+
+	compute();
+	
+	if (0 != printResult()) { return 1; }
 	
 	return 0;
 }
 
 static void printUsage(void) {
+	printf("------------------------------------------------------------------\n");
 	printf("Usage:\n");
-	printf("\t1.) enter the first Roman Numeral and press return\n");
-	printf("\t2.) enter an operation (either `+` or `-`) and press return\n");
-	printf("\t3.) enter a second Roman Numeral and press return\n");
+	printf("------------------------------------------------------------------\n");
+	printf("1.) enter the first Roman Numeral and press return\n");
+	printf("2.) enter an operation (either `+` or `-`) and press return\n");
+	printf("3.) enter a second Roman Numeral and press return\n");
+	printf("------------------------------------------------------------------\n");
+}
+
+static int attemptInput(void) {
+	input = calloc(MAX_ROMAN_NUMERAL_STRING_LENGTH, sizeof(char));
+	scanf(" %s", input);
+	getchar();
+	enterInput(input);
+	free(input);
+	return checkForErrors();
+}
+
+static int attemptOperator(void) {
+	char operator;
+	scanf(" %c", &operator);
+	getchar();
+	enterOperator(operator);
+	return checkForErrors();
+}
+
+static int printResult(void) {
+	recallResult(result);
+	printf("-----\n");
+	printf("%s\n", result->roman);
+	return checkForErrors();
+}
+
+static int checkForErrors(void) {
+	recallResult(result);
+	if (ERROR_NONE != result->error->number) {
+		printf("Sorry, but something fun happened -> %s\n", result->error->text);
+		return 1;
+	}
+	return 0;
 }
