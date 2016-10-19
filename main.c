@@ -12,19 +12,24 @@ static int printResult(void);
 static int checkForErrors(void);
 
 int main() {
+	int error = ERROR_NONE;
 	printUsage();
 	
 	result = malloc(sizeof *result);
 	initRNResult(result);
 	resetCalculator();
 	
-	if (0 != attemptInput()) { return 1; }
-	if (0 != attemptOperator()) { return 1; }
-	if (0 != attemptInput()) { return 1; }
+	error = attemptInput();
+	if (ERROR_NONE != error) { return error; }
+	error = attemptOperator(); 
+	if (ERROR_NONE != error) { return error; }
+	error = attemptInput();
+	if (ERROR_NONE != error) { return error; }
 
 	compute();
 	
-	if (0 != printResult()) { return 1; }
+	error = printResult();
+	if (ERROR_NONE != error) { return error; }
 	
 	return 0;
 }
@@ -67,7 +72,7 @@ static int checkForErrors(void) {
 	recallResult(result);
 	if (ERROR_NONE != result->error->number) {
 		printf("Sorry, but something fun happened -> %s\n", result->error->text);
-		return 1;
+		return result->error->number;
 	}
 	return 0;
 }
